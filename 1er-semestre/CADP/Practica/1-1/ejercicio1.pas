@@ -1,19 +1,21 @@
-{1. Realizar un programa que lea 2 números enteros desde teclado e informe en pantalla cuál de los
-dos números es el mayor. Si son iguales debe informar en pantalla lo siguiente: “Los números leídos
-son iguales”.}
+{1. Realizar un programa que lea 2 números enteros desde teclado e informe en pantalla cuál de los dos
+números es el mayor. Si son iguales debe informar en pantalla lo siguiente:
+Los números leídos son iguales
+}
 
-program ejercicio1;
-var
-    num1, num2: integer;
+
+program PuntoUno;
+var 
+    num1, num2: integer; 
 begin
-    writeln('Ingrese un primer numero');
+    write('Ingrese el primer número entero: ');
     readln(num1);
-    writeln('Ingrese un segundo numero');
+    write('Ingrese el segundo número entero: ');
     readln(num2);
-    if(num1 > num2) then
-        writeln(num1 ,' es mas grande que ', num2)
+    if (num1 > num2) then
+        writeln('El primer valor ingresado', (num1), 'es el mayor')
     else if (num2 > num1) then
-        writeln(num2, ' es mas grande que ', num1)
+        writeln('El segundo valor ingresado ', (num2), ' es el mayor')
     else
-        writeln('Los numeros leidos son iguales');
+        writeln('Ambos valores son iguales');
 end.
