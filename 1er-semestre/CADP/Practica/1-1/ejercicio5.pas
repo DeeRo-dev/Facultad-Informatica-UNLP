@@ -10,7 +10,7 @@ program ejercicio5;
         aux: integer;
 begin
   num2:= 0;
-  writeln ('Ingrese en el programa numeros  hasta que se ingrese uno cuyo valor sea exactamente el doble deel primer número leído');
+  writeln ('Ingrese en el programa numeros  hasta que se ingrese uno cuyo valor sea exactamente el doble del primer número leído. Solo se permite ingresar hasta 10 valores');
   write('Ingrese el primer numero: ');
   readln(num1);
   num3 := num1 * 2;
