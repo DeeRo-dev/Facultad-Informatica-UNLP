@@ -1,4 +1,7 @@
-{3. Dado el siguiente programa, indicar cuál es el error y su causa.}
+{
+    3. Dado el siguiente programa, indicar cuál es el error y su causa.
+}
+
 program alcance3;
 var 
     a: integer;
@@ -12,5 +15,5 @@ end;
 begin
     a:= 1;
     uno;
-    writeln(a, b); //Error, no puede identificar a la variable b
+    writeln(a, b); //Dado que b no existe en este contexto, se da un error de programa 
 end.

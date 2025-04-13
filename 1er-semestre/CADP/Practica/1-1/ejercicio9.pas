@@ -39,7 +39,7 @@ begin
                             res:= res - num;
                         end;          
                 end;
-            writeln('Resultado=', res);
+            writeln('Resultado: ', res);
         end
     else
         writeln('ERROR');

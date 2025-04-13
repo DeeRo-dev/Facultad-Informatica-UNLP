@@ -1,4 +1,6 @@
-{1. Dado el siguiente programa, indicar qué imprime} 
+{
+    1. Dado el siguiente programa, indicar qué imprime
+} 
 
 program alcance1;
 var 
