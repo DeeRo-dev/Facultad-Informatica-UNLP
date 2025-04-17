@@ -8,47 +8,58 @@
 }
 
 
-
 program Ejercicio6;
-    var
-        codePriceLow1, codePriceLow1, codePants: integer;
-        average: real;
-        
-    procedure readProduct(var code: integer; var typeProduct: string; var price: real);
-        var 
-            i: integer;
-        begin
-            for i := 0 to 10 do
-            begin
-                writeln('Data product: ');
-                write('Enter CODE: ');
-                readln(code);
-                write('Enter TYPE: ');
-                readln(typeProduct);
-                write('Enter PRICE: ');
-                readln(price);
-            end;
-        end;
-    procedure calculate(code: integer; typeProduct: string; price: real; var codePriceLow: integer,var codePants: integer; var average: real);
-        var
-            priceLow1, priceLow2: real;
-        begin
-            priceLow1 :=9999;
-            priceLo2 :=99999;
-            codePriceLow := 9999; 
-            codePriceLow:= 0;
-            average: 0;
-            if(price < priceLow) then
-                begin
-                    codePriceLow := 
-                end;
-        end;
-    
-    var
-        code, codePriceLow, codePants: integer;
-        typeProduct: string;
-        price, average: real;
+
+procedure readProduct(var code: integer; var typeProduct: string; var price: real);
 begin
-    writeln ('Hello World');
-    readProduct(code, typeProduct, price);
+    write('Enter CODE: ');
+    readln(code);
+    write('Enter TYPE: ');
+    readln(typeProduct);
+    write('Enter PRICE: ');
+    readln(price);
+end;
+
+// Variables globales para los dos precios más bajos y sus códigos
+var
+    priceLow1, priceLow2: real;
+    codePriceLow1, codePriceLow2: integer;
+
+procedure calculate(code: integer; price: real);
+begin
+    if (price < priceLow1) then
+    begin
+        priceLow2 := priceLow1;
+        codePriceLow2 := codePriceLow1;
+
+        priceLow1 := price;
+        codePriceLow1 := code;
+    end
+    else if (price < priceLow2) then
+    begin
+        priceLow2 := price;
+        codePriceLow2 := code;
+    end;
+end;
+
+var
+    code, i: integer;
+    typeProduct: string;
+    price: real;
+
+begin
+    priceLow1 := 999999;
+    priceLow2 := 999999;
+    codePriceLow1 := -1;
+    codePriceLow2 := -1;
+
+    for i := 1 to 4 do
+    begin
+        writeln('Product ', i, ':');
+        readProduct(code, typeProduct, price);
+        calculate(code, price);
+    end;
+
+    writeln('Codigo del producto MAS BARATO: ', codePriceLow1);
+    writeln('Codigo del SEGUNDO producto mas barato: ', codePriceLow2);
 end.
