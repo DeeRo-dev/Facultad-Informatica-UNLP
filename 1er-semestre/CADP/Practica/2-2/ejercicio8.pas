@@ -25,7 +25,7 @@ var
  begin
     cantPar := 0;
     cantImpar := 0;
-    writeln('Ingrese una secuencia de numeros, finaliza con 123456:');
+    writeln('Ingrese una secuencia de numeros, finaliza con 1234: ');
     readln(num);
     while (num <> 1234) do
         begin
