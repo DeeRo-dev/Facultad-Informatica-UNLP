@@ -1,114 +1,127 @@
-{4. Se dispone de un vector con 100 números enteros. Implementar los siguientes módulos:
-a) posicion: dado un número X y el vector de números, retorna la posición del número X en dicho vector,
-o el valor -1 en caso de no encontrarse.
-b) intercambio: recibe dos valores x e y (entre 1 y 100) y el vector de números, y retorna el mismo vector
-donde se intercambiaron los valores de las posiciones x e y.
-c) sumaVector: retorna la suma de todos los elementos del vector.
-d) promedio: devuelve el valor promedio de los elementos del vector.
-e) elementoMaximo: retorna la posición del mayor elemento del vector
-f) elementoMinimo: retorna la posicion del menor elemento del vector}
+{
+        4. Se dispone de un vector con 100 números enteros. Implementar los siguientes módulos:
+            a. posicion: dado un número X y el vector de números, retorna la posición del número X en dicho
+            vector, o el valor -1 en caso de no encontrarse.
+        b. intercambio: recibe dos valores x e y (entre 1 y 100) y el vector de números, y retorna el mismo
+            vector donde se intercambiaron los valores de las posiciones x e y.
+        c. sumaVector: retorna la suma de todos los elementos del vector.
+        d. promedio: devuelve el valor promedio de los elementos del vector.
+        e. elementoMaximo: retorna la posición del mayor elemento del vector
+        f. elementoMinimo: retorna la posicion del menor elemento del vector
+}
 
-program ejercicio4;
+
+program Vectores;
 const
-	dimF = 100;
+    cant_datos = 10;
 type
-	vector = array [1..dimF] of integer;
-procedure cargarVector(var v: vector); //Se dispone
+    vdatos = array[1..cant_datos] of real;
+    
+procedure cargarVector(var v:vdatos; var dimL : integer);
 var
-    i: integer;
+    num : real;
 begin
-	for i:= 1 to dimF do
-		v[i]:= Random(40);
+    readln(num);
+    while((dimL < cant_datos) and (num <> 0)) do
+        begin
+            dimL := dimL + 1;
+            v[dimL] := num;
+           if (dimL < cant_datos) then 
+                begin
+                    writeln('Ingrese otro valor de tipo real (0 para terminar): ');
+                    readln(num);
+                end;
+        end;
 end;
-procedure imprimirVector(v: vector);
+procedure encontrarX(v:vdatos; posicionV:integer; dimL:integer; var posicion:integer; var encontre: boolean);
 var
-	i: integer;
+    i:integer;
 begin
-	for i:= 1 to dimF do
-		write(v[i], ' | ');
+    i:=1;
+    while((i <= dimL) and (encontre = false)) do
+        begin
+            if(posicionV = v[i]) then
+                begin
+                    encontre := true;
+                    posicion:= i;
+                end;
+            i := i + 1;
+        end;
 end;
-function posicion(v: vector; x: integer): integer;
+
+
+procedure intercambiar(var v: vdatos; posicionX: integer; posicionY: integer; dimL:integer);
 var
-	pos: integer;
-	ok: boolean;
+    i, aux1, aux2:integer;
+    encontre1, encontre2: boolean;
+    aux: real;
 begin
-	ok:= false; pos:= 1;
-	while((pos <= dimF) and (not ok)) do
-		begin
-			if(v[pos] = x) then
-				ok:= true
-			else
-				pos:= pos + 1;
-		end;
-	if(ok) then
-		posicion:= pos
-	else
-		posicion:= -1;
+    aux1 := -1;
+    aux2 := -1;
+    encontrarX(v, posicionX, dimL, aux1, encontre1);
+    encontrarX(v, posicionY, dimL, aux2, encontre2);
+    if((encontre1 = true) and (encontre2 = true)) then
+        begin
+            aux:= v[posicionX];
+	        v[posicionX]:= v[posicionY];
+	        v[posicionY]:= aux;
+	        for i := 1 to dimL do
+	            writeln(v[i]:0:2);
+        end
+    else
+        writeln('Al menos uno de los dos valores no existe dentro del vector');
 end;
-procedure intercambio(var v: vector; x, y: integer);
-var
-	aux: integer;
+procedure calcularValoresVector(v: vdatos; dimL: integer; var sumaTotal: real; var promedio: real; var posMin:integer; var posMay: integer);
+var 
+    i : integer;
+    numMin, numMay: real;
 begin
-	aux:= v[x];
-	v[x]:= v[y];
-	v[y]:= aux;
-end;
-function sumaVector(v: vector): integer;
-var
-	i: integer;
-	suma: integer;
-begin
-	suma:= 0;
-	for i:= 1 to dimF do
-		suma:= suma + v[i];
-	sumaVector:= suma;
-end;
-function promedioVector(v: vector): real;
-begin
-	promedioVector:= sumaVector(v) / dimF;
-end;
-function elementoMaximo(v: vector): integer;
-var
-	max, i, pos: integer;
-begin
-	max:= -9999;
-	for i:= 1 to dimF do
-		if(v[i] > max) then
-			begin
-				pos:= i;
-				max:= v[i]
-			end;
-	elementoMaximo:= pos;
-end;
-function elementoMinimo(v: vector): integer;
-var
-	min, i, pos: integer;
-begin
-	min:= 9999;
-	for i:= 1 to dimF do
-		if(v[i] < min) then
-			begin
-				pos:= i;
-				min:= v[i]
-			end;
-	elementoMinimo:= pos;
+    numMin := 999;
+    numMay := -1;
+    sumaTotal := 0;
+    promedio := 0;
+    for i := 1 to dimL do
+        begin
+            sumaTotal := sumaTotal + v[i];
+            if(v[i] < numMin) then
+                begin
+                    numMin := v[i];
+                    posMin := i;
+                end;
+            if(v[i] > numMay) then
+                begin
+                    numMay := v[i];
+                    posMay := i;
+                end;
+            
+        end;
+    promedio := sumaTotal / dimL;
 end;
 var
-	v: vector;
-	x, y: integer;
+    dim, num, val1,val2, aux, posMin, posMay:integer;
+    datos: vdatos;
+    encontre : boolean;
+    promedio, sumaTotal: real;
 begin
-	cargarVector(v);
-	imprimirVector(v);
-    writeln();
-	writeln('Ingrese la posicion x');
-	readln(x);
-	writeln('Ingrese la posicion y');
-	readln(y);
-	intercambio(v, x, y);
-	writeln('Vector con valores intercambios de x e y');
-	imprimirVector(v);
-	writeln('La suma de todos los elementos del vector es: ', sumaVector(v));
-	writeln('El valor promedio de los elementos del vector es: ', promedioVector(v):0:2);
-	writeln('La posicion del mayor elemento del vector es: ', elementoMaximo(v));
-	writeln('La posicion del menor elemento del vector es: ', elementoMinimo(v));
+    dim := 0;
+    aux:=-1;
+    encontre:=false;
+    cargarVector(datos, dim);
+    write('Ingrese un numero paa buscar la posicion en el vector: ');
+    readln(num);
+    encontrarX(datos, num, dim, aux, encontre);
+    if(encontre = true) then
+        writeln('El valor ingresado fue encontrado en la posicion: ', aux)
+    else
+        writeln('No se encontro el valor buscado: ', aux);
+    writeln('Ingrese X e Y para intercambiar la posicion en el vector: ');
+    write('Ingrese X: ');
+    readln(val1);
+    write('Ingrese Y: ');
+    readln(val2);
+    intercambiar(datos, val1, val2, dim);
+    calcularValoresVector(datos, dim, sumaTotal, promedio, posMin, posMay);
+    writeln('La suma de todos los elementos del vector es de : ', sumaTotal:0:2);
+    writeln('La posicion del numero menor es de: ', posMin);
+    writeln('La posicion del numero mayor es de: ', posMay);
 end.
