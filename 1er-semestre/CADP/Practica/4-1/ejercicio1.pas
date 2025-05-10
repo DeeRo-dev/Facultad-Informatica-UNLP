@@ -26,23 +26,3 @@ c) for i:= 1 to 9 do
         numeros[i+1] := numeros[i+1] + numeros[i];
 d) 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 
-program ejercicio1;
-type
-	vnums = array [1..10] of integer;
-var
-	numeros : vnums;
-	i : integer;
-begin
-	for i:=1 to 10 do {primer bloque for}
-		numeros[i] := i;
-	for i := 2 to 10 do {segundo bloque for}
-		numeros[i] := numeros[i] + numeros [i-1];
-    //for i:= 1 to 9 do 
-        //numeros[i+1] := numeros[i+1] + numeros[i];
-    //for i:=1 to 9 do
-        //numeros[i+1] := numeros[i];
-    for i:= 1 to 10 do
-        write(numeros[i], ' | ');
-end.
-
-
