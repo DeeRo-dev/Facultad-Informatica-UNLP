@@ -1,82 +1,79 @@
-{7. Realizar un programa que lea números enteros desde teclado hasta que se ingrese el valor -1 (que no
-debe procesarse) e informe:
-a. la cantidad de ocurrencias de cada dígito procesado.
-b. el dígito más leído.
-c. los dígitos que no tuvieron ocurrencias.
-Por ejemplo, si la secuencia que se lee es: 63 34 99 94 96 -1, el programa deberá informar:
-Número 3: 2 veces
-Número 4: 2 veces
-Número 6: 2 veces
-Número 9: 4 veces
-El dígito más leído fue el 9.
-Los dígitos que no tuvieron ocurrencias son: 0, 1, 2, 5, 7, 8}
+
+{   
+    7. Realizar un programa que lea números enteros desde teclado hasta que se ingrese el valor -1 (que no
+        debe procesarse) e informe:
+        a. la cantidad de ocurrencias de cada dígito procesado.
+        b. el dígito más leído.
+        c. los dígitos que no tuvieron ocurrencias.
+        Por ejemplo, si la secuencia que se lee es: 63 34 99 94 96 -1, el programa deberá informar:
+        Número 3: 2 veces
+        Número 4: 2 veces
+        Número 6: 2 veces
+        Número 9: 4 veces
+        El dígito más leído fue el 9.
+        Los dígitos que no tuvieron ocurrencias son: 0, 1, 2, 5, 7, 8
+}
 
 program ejercicio7;
-const
-	dimF = 9;
+
 type
-	subRango = 0..9;
-	vecOcurrencias = array [subRango] of integer;
-procedure inicializar(var v: vecOcurrencias);
+  arreglo = array[0..9] of integer;
+
+procedure procesarNum(num: integer; var v: arreglo);
 var
-	i: subRango;
+  digito: integer;
 begin
-	for i:= 0 to dimF do
-		v[i]:= 0;
+  if num = 0 then
+    v[0] := v[0] + 1
+  else
+  begin
+    while (num <> 0) do
+    begin
+      digito := num mod 10;
+      v[digito] := v[digito] + 1;
+      num := num div 10;
+    end;
+  end;
 end;
-procedure descomponer(var v: vecOcurrencias; num: integer);
+function evaluarNum(v: arreglo): integer;
 var
-	dig: integer;
+    i, aux: integer;
 begin
-	while(num <> 0) do
-		begin
-			dig:= num mod 10;
-			v[dig]:= v[dig] + 1;
-			num:= num div 10;
-		end;
-end;
-procedure leerDescomponerNum(var v: vecOcurrencias);
-var
-	num: integer;
-begin
-	writeln('Ingrese un numero entero');
-	readln(num);
-	while(num <> -1) do
-		begin
-			descomponer(v, num);
-			writeln('Ingrese un numero entero');
-			readln(num);
-		end;
-end;
-procedure imprimirVector(v: vecOcurrencias);
-var
-	i: subRango;
-begin
-	for i:= 0 to 9 do
-		if(v[i] > 0) then
-			writeln('Numero ', i, ': ', v[i], ' veces')
-		else
-			writeln('El digito ', i, ' no tuvo ocurrencias');
-end;
-function maximaOcurrencia(v: vecOcurrencias): subRango;
-var
-	max, posMax: integer;
-    i: subRango;
-begin
-	max:= -1;
-	for i:= 0 to 9 do
-		if(v[i] > max) then
-			begin
-				max:= v[i];
-				posMax:= i;
-			end;
-	maximaOcurrencia:= posMax;
+    aux := 0;
+    for i := 0 to 9 do
+    begin
+        if(v[i] > aux) then
+            aux := v[i];
+    end;
+    evaluarNum:=aux;
 end;
 var
-	v: vecOcurrencias;
+  num: integer;
+  v: arreglo;
+  i, numMasVeces: integer;
 begin
-	inicializar(v);
-	leerDescomponerNum(v);
-	imprimirVector(v);
-    writeln('El digito mas leido fue: ', maximaOcurrencia(v));
+    numMasVeces := 0;
+    for i := 0 to 9 do
+      v[i] := 0;
+    writeln('Ingrese numeros, el programa finaliza al ingresar el valor -1');
+    readln(num);
+    while (num <> -1) do
+    begin
+        procesarNum(num, v);
+        writeln('Ingrese otro valor');
+        readln(num);
+    end;
+    numMasVeces := evaluarNum(v);
+    writeln('Frecuencia de digitos del 0 al 9:');
+    for i := 0 to 9 do
+        writeln('Dígito ', i, ': ', v[i], ' veces');
+        
+    writeln('El numero mas veces leido es el: ', v[numMasVeces]);
+    writeln('Los digitos sin ocurrencias son: ');
+    for i := 0 to 9 do
+        begin
+            if(v[i] = 0) then
+                writeln('Dígito ', i);
+       end;
 end.
+
