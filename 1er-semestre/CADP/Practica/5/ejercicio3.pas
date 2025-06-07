@@ -17,7 +17,7 @@ begin
         n^[i]:= i;
     writeln(sizeof(n^), ' bytes');
 end.}
-
+{$mode delphi}
 program ejercicio3;
 type
     numeros = array[1..10000] of integer;
@@ -27,11 +27,11 @@ var
     num: numeros;
     i:integer;
 begin
-    writeln(sizeof(n), ' bytes'); //4 bytes
-    writeln(sizeof(num), ' bytes'); //DIMF * TIPO DE DATO = 10000 * 2 = 20000 bytes
+    writeln(sizeof(n), ' bytes'); // 8 bytes
+    writeln(sizeof(num), ' bytes y esto_'); // 40.000
     new(n);
-    writeln(sizeof(n^), ' bytes'); //20000 bytes
+    writeln(sizeof(n^), ' bytes'); //40.000
     for i:= 1 to 5000 do
         n^[i]:= i;
-    writeln(sizeof(n^), ' bytes'); //20000 bytes
+    writeln(sizeof(n^), ' bytes'); //40.000
 end.
