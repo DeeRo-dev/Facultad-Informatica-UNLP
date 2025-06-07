@@ -6,7 +6,7 @@ type
     puntero_cadena = ^cadena;
 procedure cambiarTexto(pun: puntero_cadena);
 begin
-    new(pun);
+    new(pun); //Dado que si asigna una nueva direccion en memoria, esta asignacion queda encapsulada en el precudure. Ya que el valor se pasa por ref.
     pun^:= 'Otro texto';
 end;
 var
@@ -18,22 +18,3 @@ begin
     cambiarTexto(pc);
     writeln(pc^);
 end.}
-
-program ejercicio4D;
-type
-    cadena = string[50];
-    puntero_cadena = ^cadena;
-procedure cambiarTexto(pun: puntero_cadena);
-begin
-    new(pun);
-    pun^:= 'Otro texto';
-end;
-var
-    pc: puntero_cadena;
-begin
-    new(pc);
-    pc^:= 'Un texto';
-    writeln(pc^); //Un texto
-    cambiarTexto(pc);
-    writeln(pc^); //Un texto. Ahora el contenido no se vio modificado, ya que dentro del procedimiento se hizo un new, por ende la copia de la variable apunta a otra direccion de memoria distinta a donde apuntaba originalmente, no modificando la del programa principal. Una vez vuelve, la copia se destruye.
-end.
