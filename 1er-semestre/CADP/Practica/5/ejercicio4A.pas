@@ -19,7 +19,7 @@ type
 var
     pc: puntero_cadena;
 begin
-    pc^:= 'un nuevo texto';
+    pc^:= 'un nuevo texto'; // Esto no es posible, ya que no tiene una direccion en memoria dinamica asignada, deberia hacerce luego del new()
     new(pc);
-    writeln(pc^); //pc no está apuntando a ninguna dirección de memoria válida, ya que no se ha asignado ningun new, dando error cuando se accede al puntero para asignarle un string
+    writeln(pc^); //Imprime un valor basura, que es lo que hay en memoria dinamica
 end.
