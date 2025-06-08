@@ -1,5 +1,6 @@
 {4) d) Indicar los valores que imprimen los siguientes programas en Pascal. Justificar mediante prueba de
 escritorio. 
+
 program punteros;
 type
     cadena = string[50];
