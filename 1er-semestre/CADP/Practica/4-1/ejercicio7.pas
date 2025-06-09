@@ -1,79 +1,87 @@
+{
 
-{   
-    7. Realizar un programa que lea números enteros desde teclado hasta que se ingrese el valor -1 (que no
+        Realizar un programa que lea números enteros desde teclado hasta que se ingrese el valor -1 (que no
         debe procesarse) e informe:
-        a. la cantidad de ocurrencias de cada dígito procesado.
-        b. el dígito más leído.
-        c. los dígitos que no tuvieron ocurrencias.
-        Por ejemplo, si la secuencia que se lee es: 63 34 99 94 96 -1, el programa deberá informar:
+        a. La cantidad de ocurrencias de cada dígito procesado.
+        b. El dígito más leído.
+        c. Los dígitos que no tuvieron ocurrencias.
+        Por ejemplo: si la secuencia que se lee es: 63 34 99 94 96 -1, el programa deberá informar:
         Número 3: 2 veces
         Número 4: 2 veces
         Número 6: 2 veces
         Número 9: 4 veces
         El dígito más leído fue el 9.
         Los dígitos que no tuvieron ocurrencias son: 0, 1, 2, 5, 7, 8
+
 }
 
-program ejercicio7;
-
+program Ejercicio7;
 type
-  arreglo = array[0..9] of integer;
-
-procedure procesarNum(num: integer; var v: arreglo);
+   tipoDeNumeros = array [0..9] of integer;
+procedure procesarNumero(var storage: tipoDeNumeros; num: integer);
 var
-  digito: integer;
+    aux, digito: integer;
 begin
-  if num = 0 then
-    v[0] := v[0] + 1
-  else
-  begin
-    while (num <> 0) do
+    aux := num;
+    if(num = 0) then
+        storage[0] := storage[0] + 1;
+        
+    while(aux <> 0) do
     begin
-      digito := num mod 10;
-      v[digito] := v[digito] + 1;
-      num := num div 10;
+      digito := aux mod 10;
+      storage[digito] := storage[digito] + 1;
+      aux := aux div 10;
     end;
-  end;
 end;
-function evaluarNum(v: arreglo): integer;
+procedure digitoMasLeido(storage: tipoDeNumeros);
 var
-    i, aux: integer;
+    i, maxCantidad, digito: integer;
+begin
+    maxCantidad := -1;
+    digito := -1;
+    for i := 0 to 9 do
+    begin
+        if(storage[i] > maxCantidad) then
+        begin
+            maxCantidad := storage[i];
+            digito := i;
+        end;
+    end;
+    writeln('El dígito más leído fue el: ', digito);
+end;
+
+procedure digitosLeidos(storage: tipoDeNumeros);
+var
+    aux,i : integer;
 begin
     aux := 0;
+     writeln('--- Cantidad de ocurrencias por dígito ---');
     for i := 0 to 9 do
     begin
-        if(v[i] > aux) then
-            aux := v[i];
+        if(storage[i] > 0) then
+            writeln('Dígito ', i, ': ', storage[i], ' veces');
     end;
-    evaluarNum:=aux;
+     writeln('--- Dígitos sin ocurrencias ---');
+    for i := 0 to 9 do
+    begin
+        if(storage[i] = 0) then
+            writeln(i);
+    end;
 end;
 var
-  num: integer;
-  v: arreglo;
-  i, numMasVeces: integer;
+   numero, i, digH: integer;
+   numeros: tipoDeNumeros;
 begin
-    numMasVeces := 0;
-    for i := 0 to 9 do
-      v[i] := 0;
-    writeln('Ingrese numeros, el programa finaliza al ingresar el valor -1');
-    readln(num);
-    while (num <> -1) do
+    digH := 0;
+    writeln('Ingrese un numero, el programa se termina cuando ingresa el numero -1');
+    readln(numero);
+    while(numero <> -1 ) do 
     begin
-        procesarNum(num, v);
-        writeln('Ingrese otro valor');
-        readln(num);
+        procesarNumero(numeros ,numero);
+        writeln('Ingrese otro valor para procesar');
+        readln(numero);
     end;
-    numMasVeces := evaluarNum(v);
-    writeln('Frecuencia de digitos del 0 al 9:');
-    for i := 0 to 9 do
-        writeln('Dígito ', i, ': ', v[i], ' veces');
-        
-    writeln('El numero mas veces leido es el: ', v[numMasVeces]);
-    writeln('Los digitos sin ocurrencias son: ');
-    for i := 0 to 9 do
-        begin
-            if(v[i] = 0) then
-                writeln('Dígito ', i);
-       end;
+    writeln('Se termino de procesar los numeros');
+    digitoMasLeido(numeros);
+    digitosLeidos(numeros);
 end.
-
