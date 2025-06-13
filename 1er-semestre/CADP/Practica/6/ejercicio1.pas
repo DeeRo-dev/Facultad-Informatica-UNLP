@@ -39,6 +39,7 @@ lista.}
 numero 0, que no debe procesarse.
 b. 48 - 13 - 21 - 10}
 
+
 program JugamosConListas;
 type
     lista = ^nodo;
@@ -55,38 +56,41 @@ begin
     aux^.sig := L;
     L := aux;
 end;
-procedure imprimirLista(l: lista);
+procedure incrementar(var l: lista; num: integer);
+var
+    aux: lista;
 begin
-    while(l<>nil) do 
-        begin
-            writeln(l^.num);
-            l:= l^.sig;
-        end;
+    aux := l;
+    while(aux <> nil) do
+    begin
+        aux^.num := aux^.num + num;
+        aux := aux^.sig;
+    end;
 end;
-procedure incrementarLista(l: lista; num: integer);
+procedure leerLista(l: lista);
 begin
-    while(l<>nil) do
-        begin
-            l^.num:= l^.num + num;
-            l:= l^.sig;
-        end;
+    while(l <> nil) do
+    begin
+        writeln('El contenido de la lista es: ', l^.num);
+        l := l^.sig;
+    end;
 end;
 var
     pri : lista;
-    valor : integer;
+    valor, inc : integer;
 begin
     pri := nil;
     writeln('Ingrese un numero');
     read(valor);
-    while (valor <> 0) do begin
+    while (valor <> 0) do
+    begin
         armarNodo(pri, valor);
-        writeln('Ingrese un numero');
-    read(valor);
+        read(valor);
+        writeln('‘Ingrese un numero’');
     end;
-    imprimirLista(pri);
-    writeln('Ingrese un valor');
-    readln(valor);
-    writeln('Lista actualizada:');
-    incrementarLista(pri, valor);
-    imprimirLista(pri);
+    leerLista(pri);
+    writeln('Íngrese un valor para incrementar cada dato de la lista: ');
+    read(inc);
+    incrementar(pri, inc);
+    leerLista(pri);
 end.
