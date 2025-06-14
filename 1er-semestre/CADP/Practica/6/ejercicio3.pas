@@ -1,94 +1,139 @@
-{3. Utilizando el programa del ejercicio 1, realizar los siguientes cambios:
-a. Modificar el módulo armarNodo para que los elementos se guarden en la lista en el orden en que
-fueron ingresados (agregar atrás).
-b. Modificar el módulo armarNodo para que los elementos se guarden en la lista en el orden en que
-fueron ingresados, manteniendo un puntero al último ingresado.}
-
-program ejercicio3;
+{
+	3. Utilizando el programa del ejercicio 1, realizar los siguientes cambios:
+	
+	a. Modificar el módulo armarNodo para que los elementos se guarden en la lista en el orden en que
+	fueron ingresados (agregar atrás).
+	
+	b. Modificar el módulo armarNodo para que los elementos se guarden en la lista en el orden en que
+	fueron ingresados, manteniendo un puntero al último ingresado.
+}
+ 
+//inciso A
+program JugamosConListas;
 type
-	lista = ^nodo;
-	nodo = record
-		dato : integer;
-		sig : lista;
-	end;
-procedure armarNodo(var l: lista; elem: integer);
+    lista = ^nodo;
+    nodo = record
+        num : integer;
+        sig : lista;
+    end;
+procedure armarNodo(var L: lista; v: integer);
 var
-	nuevo, aux: lista;
+  aux, act: lista;
 begin
-	new(nuevo);
-	nuevo^.dato:= elem;
-	nuevo^.sig:= nil;
-	if(l = nil) then l:= nuevo
-	else
-		begin
-			aux:= l;
-			while(aux^.sig <> nil) do
-				aux:= aux^.sig;
-			aux^.sig:= nuevo;
-		end;
+  new(aux);
+  aux^.num := v;
+  aux^.sig := nil;
+  
+  if (L = nil) then
+    L := aux
+  else
+  begin
+    act := L;
+    while (act^.sig <> nil) do
+      act := act^.sig;
+    act^.sig := aux;
+  end;
 end;
-procedure armarNodoDosPunteros(var pI, pU: lista; num: integer);
+procedure incrementar(var l: lista; num: integer);
 var
-	aux: lista;
+    aux: lista;
 begin
-	new(aux);
-	aux^.dato:= num;
-	aux^.sig:= nil;
-	if(pI = nil) then
-		begin
-			pI:= aux;
-			pU:= aux;
-		end
-	else
-		begin
-			pU^.sig:= aux;
-			pU:= aux;
-		end;
+    aux := l;
+    while(aux <> nil) do
+    begin
+        aux^.num := aux^.num + num;
+        aux := aux^.sig;
+    end;
 end;
-procedure cargarLista1(var l: lista);
-var
-	num: integer;
+procedure leerLista(l: lista);
 begin
-	writeln('Ingrese numero');
-	readln(num);
-	while(num <> 0) do
-		begin
-			armarNodo(l, num);
-			writeln('Ingrese numero');
-			readln(num);
-		end;
-end;
-procedure cargarLista2(var l: lista);
-var
-	num: integer;
-	pU: lista;
-begin
-	writeln('Ingrese numero');
-	readln(num);
-	while(num <> 0) do
-		begin
-			armarNodoDosPunteros(l, pU, num);
-			writeln('Ingrese numero');
-			readln(num);
-		end;
-end;
-procedure imprimirLista(l: lista);
-begin
-	while(l<>nil) do
-		begin
-			writeln(l^.dato);
-			l:= l^.sig;
-		end;
+    while(l <> nil) do
+    begin
+        writeln('El contenido de la lista es: ', l^.num);
+        l := l^.sig;
+    end;
 end;
 var
-	l1, l2: lista;
+    pri, ult : lista;
+    valor, inc : integer;
 begin
-	l1:= nil;
-	l2:= nil;
-	cargarLista1(l1);
-	cargarLista2(l2);
-    writeln('Lista con un unico puntero');
-	imprimirLista(l1);
-    writeln('Lista con dos punteros');
-	imprimirLista(l2);
+    pri := nil;
+    ult := nil;
+    writeln('Ingrese un numero');
+    read(valor);
+    while (valor <> 0) do
+    begin
+        armarNodo(pri, ult, valor);
+        read(valor);
+        writeln('‘Ingrese un numero’');
+    end;
+    leerLista(pri);
+    writeln('Íngrese un valor para incrementar cada dato de la lista: ');
+    read(inc);
+    incrementar(pri, inc);
+    leerLista(pri);
+end.
+
+
+
+
+//inciso B
+program JugamosConListas;
+type
+    lista = ^nodo;
+    nodo = record
+        num : integer;
+        sig : lista;
+    end;
+procedure armarNodo(var L, ult: lista; v: integer);
+var
+    aux : lista;
+begin
+    new(aux);
+    aux^.num := v;
+    aux^.sig := nil;
+    if(L = nil) then
+        L := aux
+    else
+        ult^.sig := aux;
+    ult := aux;
+end;
+procedure incrementar(var l: lista; num: integer);
+var
+    aux: lista;
+begin
+    aux := l;
+    while(aux <> nil) do
+    begin
+        aux^.num := aux^.num + num;
+        aux := aux^.sig;
+    end;
+end;
+procedure leerLista(l: lista);
+begin
+    while(l <> nil) do
+    begin
+        writeln('El contenido de la lista es: ', l^.num);
+        l := l^.sig;
+    end;
+end;
+var
+    pri, ult : lista;
+    valor, inc : integer;
+begin
+    pri := nil;
+    ult := nil;
+    writeln('Ingrese un numero');
+    read(valor);
+    while (valor <> 0) do
+    begin
+        armarNodo(pri, ult, valor);
+        read(valor);
+        writeln('‘Ingrese un numero’');
+    end;
+    leerLista(pri);
+    writeln('Íngrese un valor para incrementar cada dato de la lista: ');
+    read(inc);
+    incrementar(pri, inc);
+    leerLista(pri);
 end.
