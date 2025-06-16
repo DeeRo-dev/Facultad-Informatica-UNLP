@@ -1,121 +1,148 @@
-{5. Realizar un programa que lea y almacene la información de productos de un supermercado. De cada
-producto se lee: código, descripción, stock actual, stock mínimo y precio. La lectura finaliza cuando se
-ingresa el código -1, que no debe procesarse. Una vez leída y almacenada toda la información, calcular
-e informar:
-a. Porcentaje de productos con stock actual por debajo de su stock mínimo.
-b. Descripción de aquellos productos con código compuesto por al menos tres dígitos pares.
-c. Código de los dos productos más económicos.}
+{
+    5. Realizar un programa que lea y almacene la información de productos de un supermercado. De cada
+    producto se lee: código, descripción, stock actual, stock mínimo y precio. La lectura finaliza cuando se
+    ingresa el código -1, que no debe procesarse. Una vez leída y almacenada toda la información, calcular
+    e informar:
+
+    a. Porcentaje de productos con stock actual por debajo de su stock mínimo.
+    
+    b. Descripción de aquellos productos con código compuesto por al menos tres dígitos pares.
+    
+    c. Código de los dos productos más económicos.
+}
+
 
 program ejercicio5;
 type
-	producto = record
-		codigo: integer;
-		desc: string;
-		stockActual: integer;
-		stockMin: integer;
-		precio: real;
-	end;
-	lista = ^nodo;
-	nodo = record
-		dato: producto;
-		sig: lista;
-	end;
+    lista = ^almProductos;
+    producto = record
+        cod: integer;
+        descripcion: string;
+        stockAct: integer;
+        stockMin: integer;
+        precio: real;
+    end;
+    almProductos = record
+        dato: producto;
+        sig: lista;
+    end;
 procedure leerProducto(var p: producto);
 begin
-	writeln('Ingrese el codigo del producto');
-	readln(p.codigo);
-	if(p.codigo <> -1) then
-		begin
-			writeln('Ingrese la descripcion del producto');
-			readln(p.desc);
-			writeln('Ingrese el stock actual del producto');
-			readln(p.stockActual);
-			writeln('Ingrese el stock minimo del producto');
-			readln(p.stockMin);
-			writeln('Ingrese el precio del producto');
-			readln(p.precio);
-		end;
+    writeln('-----Vamos a ingresar un producto-----');
+    write('Ingrese el codigo: ');
+    readln(p.cod);
+    if(p.cod <> -1) then
+    begin
+        write('Ingrese una breve descripcion: ');
+        readln(p.descripcion);
+        write('Ingrese stock actual: ');
+        readln(p.stockAct);
+        write('Ingrese stock minimo que puede haber: ');
+        readln(p.stockMin);
+        write('Ingrese el precio: ');
+        readln(p.precio);
+    end;
 end;
-procedure agregarAdelante(var l: lista; p: producto);
+procedure almacenarProductos(var l: lista; p: producto);
 var
-	aux: lista;
+    aux: lista;
 begin
-	new(aux);
-	aux^.sig:= l;
-	aux^.dato:= p;
-	l:= aux;
+    new(aux);
+    aux^.dato := p;
+    aux^.sig := l;
+    l:= aux;
 end;
-procedure cargarLista(var l: lista);
+procedure generarProductos(var l: lista);
 var
-	p: producto;
+    p: producto;
 begin
-	leerProducto(p);
-	while(p.codigo <> -1) do
-		begin
-			agregarAdelante(l, p);
-			leerProducto(p);
-		end;
+    leerProducto(p);
+    while(p.cod <> -1) do
+    begin
+        almacenarProductos(l, p);
+        leerProducto(p);
+    end;
 end;
-function cumple3Digitos(num: integer): boolean;
+procedure incisoA(l: lista; var porcentage: real);
 var
-	dig: integer;
-	cant: integer;
+    cantStock, cantStockMin: integer;
 begin
-	cant:= 0;
-	while(num <> 0) and (cant < 3) do
-		begin
-			dig:= num mod 10;
-			if(dig mod 2 = 0) then
-				cant:= cant + 1;
-			num:= num div 10;
-		end;
-	cumple3Digitos:= cant = 3;
+    cantStock:= 0;
+    cantStockMin:= 0;
+    while(l <> nil) do
+    begin
+        if(l^.dato.stockAct < l^.dato.stockMin) then
+            cantStockMin:= cantStockMin + 1;
+        cantStock := cantStock + 1;
+        l:= l^.sig;
+    end;
+    porcentage:= (cantStockMin / cantStock) * 100;
 end;
-procedure minimo(var min1, min2: real; var codMin1, codMin2: integer; codigo: integer; precio: real);
-begin
-	if(precio < min1) then
-		begin
-			min2:= min1;
-			min1:= precio;
-			codMin2:= codMin1;
-			codMin1:= codigo;
-		end
-	else
-		if(precio < min2) then
-			begin
-				min2:= precio;
-				codMin2:= codigo;
-			end;
-end;
-procedure procesarLista(l: lista; var porcentaje: real; var codMin1, codMin2: integer);
+procedure incisoB(l:lista);
 var
-	cant, stockMenor: integer;
-	min1, min2: real;
+    cont, aux, num: integer;
 begin
-	cant:= 0;
-	stockMenor:= 0;
-	min1:= 9999;
-	min2:= 9999;
-	while(l <> nil) do
-		begin
-			cant:= cant + 1;
-			if(l^.dato.stockActual < l^.dato.stockMin) then
-				stockMenor:= stockMenor + 1;
-			if(cumple3Digitos(l^.dato.codigo)) then
-				writeln('Descripcion: ', l^.dato.desc);
-			minimo(min1, min2, codMin1, codMin2, l^.dato.codigo, l^.dato.precio);
-            l:= l^.sig;
-		end;
-	porcentaje:= (stockMenor / cant) * 100;
+    while(l <> nil) do
+    begin
+        num:= l^.dato.cod;
+        cont := 0;
+        while(num <> 0) do 
+        begin
+            aux:= (num MOD 10);
+            if((aux MOD 2) = 0) then
+                cont := cont + 1;
+            num := num DIV 10;
+        end;
+        if(cont >= 3 ) then
+            writeln(l^.dato.cod, ': ', l^.dato.descripcion);
+        l := l^.sig;
+    end; 
+end;
+procedure incisoC(l : lista);
+var
+    codMin, codMasMin: integer;
+    precioMin, precioMasMin: real;
+begin
+    precioMin:=9999;
+    precioMasMin:=99999;
+    codMin := -1;
+    codMasMin := -1;
+    while(l <> nil) do
+    begin
+        if(l^.dato.precio < precioMasMin) then
+        begin
+            precioMin := precioMasMin;
+            codMin := codMasMin;
+            precioMasMin := l^.dato.precio;
+            codMasMin := l^.dato.cod;
+        end
+        else if(l^.dato.precio < precioMin) then
+        begin
+            precioMin := l^.dato.precio;
+            codMin := l^.dato.cod;
+        end;
+        l := l^.sig;
+    end;
+    writeln('El codigo mas del producto mas barato es el: ', codMasMin, '. Y el segundo mas barato es el: ', codMin);
+end;
+procedure leerLista(l: lista);
+begin
+    while(l <> nil) do
+    begin
+        writeln('El contenido de la lista es: ', l^.dato.cod);
+        l := l^.sig;
+    end;
 end;
 var
-	l: lista;
-	porcentaje: real;
-	codMin1, codMin2: integer;
+    l: lista;
+    porcentage : real;
 begin
-	l:= nil;
-	cargarLista(l);
-	procesarLista(l, porcentaje, codMin1, codMin2);
-	writeln('El porcentaje de productos con stock actual por debajo de su stock minimo es: ', porcentaje:0:2);
-	writeln('Los codigos de los dos productos mas economicos son: ', codMin1, ' y ', codMin2);
-end.
+    l:= nil;
+    porcentage:= 0;
+    generarProductos(l);
+    incisoA(l, porcentage);
+    writeln('El porcentage de productos con stock actual es menor al stock minimo es de: ', porcentage:0:2, '%');
+    incisoB(l);
+    incisoC(l);
+    leerLista(l);
+End.
