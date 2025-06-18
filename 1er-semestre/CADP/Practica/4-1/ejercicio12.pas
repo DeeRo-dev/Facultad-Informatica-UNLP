@@ -1,146 +1,97 @@
-{12. En astrofísica, una galaxia se identifica por su nombre, su tipo (1. elíptica; 2. espiral; 3. lenticular; 4.
-irregular), su masa (medida en kg) y la distancia en pársecs (pc) medida desde la Tierra. La Unión
-Astronómica Internacional cuenta con datos correspondientes a las 53 galaxias que componen el Grupo
-Local. Realizar un programa que lea y almacene estos datos y, una vez finalizada la carga, informe:
-a) La cantidad de galaxias de cada tipo.
-b) La masa total acumulada de las 3 galaxias principales (la Vía Láctea, Andrómeda y Triángulo) y el
-porcentaje que esto representa respecto a la masa de todas las galaxias.
-c) La cantidad de galaxias no irregulares que se encuentran a menos de 1000 pc.
-d) El nombre de las dos galaxias con mayor masa y el de las dos galaxias con menor masa.}
+{
+	12. En astrofísica, una galaxia se identifica por su nombre, su tipo (1. elíptica; 2. espiral; 3. lenticular; 4.
+	irregular), su masa (medida en kg) y la distancia en pársecs (pc) medida desde la Tierra. La Unión
+	Astronómica Internacional cuenta con datos correspondientes a las 53 galaxias que componen el Grupo
+	Local. Realizar un programa que lea y almacene estos datos y, una vez finalizada la carga, informe:
+	
+	a) La cantidad de galaxias de cada tipo.
+	
+	b) La masa total acumulada de las 3 galaxias principales (la Vía Láctea, Andrómeda y Triángulo) y el
+	porcentaje que esto representa respecto a la masa de todas las galaxias.
+	
+	c) La cantidad de galaxias no irregulares que se encuentran a menos de 1000 pc.
+	
+	d) El nombre de las dos galaxias con mayor masa y el de las dos galaxias con menor masa.
+}
 
-program ejercicio12;
+program ejercicio12; 
 const
-	dimf = 3;
+	cantGalaxias = 3;
 type
-	subGalaxia = 1..dimf;
-	subTipo = 1..4;
-	galaxia = record
+	tipos = 1..4;
+	datoGalaxia = record
 		nombre: string;
-		tipo: subTipo;
-		masa: real;
-		distancia: real;
+		tipo: tipos;
+		masa: integer;
+		pc: integer;
 	end;
-	vecGalaxias = array[subGalaxia] of galaxia;
-	vecContador = array[subTipo] of integer;
-procedure leerGalaxia(var g: galaxia);
+	almGalaxias = array [1..cantGalaxias] of datoGalaxia;
+	tiposGalaxias = array [tipos] of integer;
+procedure leerGalaxia(var dato:datoGalaxia);
 begin
-	writeln('Ingrese el nombre de la galaxia');
-	readln(g.nombre);
-	writeln('Ingrese el tipo de galaxia (1 a 4)');
-	readln(g.tipo);
-	writeln('Ingrese la masa medida en kg de la galaxia');
-	readln(g.masa);
-	writeln('Ingrese la distancia en parsecs medida desde la Tierra a la galaxia');
-	readln(g.distancia);
+	write('Ingrese el nombre de la galaxia: ');
+	readln(dato.nombre);
+	write('Tipo de galaxia (1. elíptica; 2. espiral; 3. lenticular; 4. irregular): ');
+	readln(dato.tipo);
+	write('Ingre el numero medido en kl de su masa: ');
+	readln(dato.masa);
+	write('Ingre el pc: ');
+	readln(dato.pc);
 end;
-procedure cargarVector(var v: vecGalaxias);
+procedure guardarDatosGalaxias(var v: almGalaxias);
 var
-	i: subGalaxia;
-	g: galaxia;
+	d: datoGalaxia;
+	i: integer;
 begin
-	for i:= 1 to dimf do
+	for i := 1 to cantGalaxias do
+	begin
+	 	writeln('--- Galaxia ', i, ' ---');
+		leerGalaxia(d);
+		v[i] := d;
+	end;
+end;
+procedure incisoA(v: almGalaxias; v2: tiposGalaxias);
+var
+	i, j, k : integer;
+begin
+	for i := 1 to 4 do
+	begin
+		v2[i] := 0;  
+	end;
+	for j := 1 to cantGalaxias do
+	begin
+		v2[v[j].tipo] := v2[v[j].tipo] + 1; 
+	end;
+	for k := 1 to 4 do
+	begin
+		writeln('Tipo ', k, ': ', v2[k], ' galaxias');
+	end;
+end;
+procedure incisoB(v: almGalaxias; var totalMasa: integer; var masaPorTres:integer);
+var
+	 i: integer;
+begin
+	for i := 1 to cantGalaxias do
+	begin
+		if((v[i].nombre = 'la Vía Láctea') or (v[i].nombre = 'Andrómeda') or (v[i].nombre = 'Triángulo')) then
 		begin
-			leerGalaxia(g);
-			v[i]:= g;
+			masaPorTres := masaPorTres + v[i].masa;
 		end;
-end;
-procedure inicializarVector(var v: vecContador);
-var
-	i: subTipo;
-begin
-	for i:= 1 to 4 do
-		v[i]:= 0;
-end;
-function cumpleNombre(nom: string): boolean;
-begin
-	cumpleNombre:= (nom = 'La Via Lactea') or (nom = 'Andromeda') or (nom = 'Triangulo');
-end;
-function cumpleTipoDistancia(tipo: subTipo; dist: real): boolean;
-begin
-	cumpleTipoDistancia:= (not(tipo = 4) and (dist < 1000));
-end;
-procedure maximos(var max1, max2: real; var nomMax1, nomMax2: string; masa: real; nom: string);
-begin
-	if(masa > max1) then
-		begin
-			max2:= max1;
-			max1:= masa;
-			nomMax2:= nomMax1;
-			nomMax1:= nom;
-		end
-	else
-		if(masa > max2) then
-			begin
-				max2:= masa;
-				nomMax2:= nom;
-			end;
-end;
-procedure minimos(var min1, min2: real; var nomMin1, nomMin2: string; masa: real; nom: string);
-begin
-	if(masa < min1) then
-		begin
-			min2:= min1;
-			min1:= masa;
-			nomMin2:= nomMin1;
-			nomMin1:= nom;
-		end
-	else
-		if(masa < min2) then
-			begin
-				min2:= masa;
-				nomMin2:= nom;
-			end;
-end;
-procedure procesar(v: vecGalaxias; var vecCont: vecContador; var masaTotal3G, porcentaje: real; var cantGalNoIrreg: integer; var nomMax1, nomMax2, nomMin1, nomMin2: string);
-var
-	i: subGalaxia;
-	tipo: subTipo;
-	masaTotal, masa, max1, max2, min1, min2: real;
-	nombre: string;
-begin
-	masaTotal:= 0;
-	max1:= -999;
-	max2:= -999;
-	min1:= 9999;
-	min2:= 9999;
-	for i:= 1 to dimf do
-		begin
-			tipo:= v[i].tipo;
-			masa:= v[i].masa;
-			nombre:= v[i].nombre;
-			vecCont[tipo]:= vecCont[tipo] + 1;
-			if(cumpleNombre(nombre)) then
-				masaTotal3G:= masaTotal3G + masa;
-			masaTotal:= masaTotal + masa;
-			if(cumpleTipoDistancia(tipo, v[i].distancia)) then
-				cantGalNoIrreg:= cantGalNoIrreg + 1;
-			maximos(max1, max2, nomMax1, nomMax2, masa, nombre);
-			minimos(min1, min2, nomMin1, nomMin2, masa, nombre);
-		end;
-	porcentaje:= (masaTotal3G / masaTotal)*100;
-end;
-procedure imprimirVector(v: vecContador);
-var
-	i: subTipo;
-begin
-	for i:= 1 to 4 do
-		writeln('La cantidad de galaxias del tipo ', i, ' es:', v[i]);
+		totalMasa := totalMasa + v[i].masa;
+	end;
 end;
 var
-	v: vecGalaxias;
-	vecCont: vecContador;
-	masaTotal3G, porcentaje: real;
-	cantGalNoIrreg: integer;
-	nomMax1, nomMax2, nomMin1, nomMin2: string;
+	datosGalaxias: almGalaxias;
+	datosTipos: tiposGalaxias;
+	porcentaje: real;
+	totalMasa, masaPorTres : integer;
 begin
-	cargarVector(v);
-	inicializarVector(vecCont);
-	masaTotal3G:= 0;
-	porcentaje:= 0;
-	cantGalNoIrreg:= 0;
-	procesar(v, vecCont, masaTotal3G, porcentaje, cantGalNoIrreg, nomMax1, nomMax2, nomMin1, nomMin2);
-	imprimirVector(vecCont);
-	writeln('La masa total acumulada de las 3 galaxias principales (la Via Lactea, Andromeda y Triangulo) es: ', masaTotal3G:0:2, ' y el porcentaje que esto representa respecto a la masa de todas las galaxias es: ', porcentaje:0:2, '%');
-	writeln('La cantidad de galaxias no irregulares que se encuentran a menos de 1000 pc es: ', cantGalNoIrreg);
-	writeln('El nombre de las dos galaxias con mayor masa son: ', nomMax1, ' y ', nomMax2, '  y el de las dos galaxias con menor masa son: ', nomMin1, ' y ', nomMin2);
-end.
+	masaPorTres := 0;
+	totalMasa := 0;
+	guardarDatosGalaxias(datosGalaxias);
+	incisoA(datosGalaxias, datosTipos);
+	incisoB(datosGalaxias, totalMasa, masaPorTres);
+	writeln('Masa total de las 3 galaxias principales: ', masaPorTres:0:2);
+	porcentaje := (masaPorTres / totalMasa) * 100;
+	writeln('Representan el ', porcentaje:0:2, '% de la masa total.');
+End.
