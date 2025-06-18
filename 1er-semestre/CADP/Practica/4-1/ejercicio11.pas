@@ -1,79 +1,100 @@
-{11. El colectivo de fotógrafos ArgenPics desea conocer los gustos de sus seguidores en las redes sociales. Para
-ello, para cada una de las 200 fotos publicadas en su página de Facebook, cuenta con la siguiente
-información: título de la foto, el autor de la foto, cantidad de Me gusta, cantidad de clics y cantidad de
-comentarios de usuarios. Realizar un programa que lea y almacene esta información. Una vez finalizada la
-lectura, el programa debe procesar los datos e informar:
-a) Título de la foto más vista (la que posee mayor cantidad de clics).
-b) Cantidad total de Me gusta recibidas a las fotos cuyo autor es el fotógrafo “Art Vandelay”.
-c) Cantidad de comentarios recibidos para cada una de las fotos publicadas en esa página.}
+{
+	11. El colectivo de fotógrafos ArgenPics desea conocer los gustos de sus seguidores en las redes sociales. Para
+	ello, para cada una de las 200 fotos publicadas en su página de Facebook, cuenta con la siguiente
+	información: título de la foto, el autor de la foto, cantidad de Me gusta, cantidad de clics y cantidad de
+	comentarios de usuarios. Realizar un programa que lea y almacene esta información. Una vez finalizada la
+	lectura, el programa debe procesar los datos e informar:
+	
+	a) Título de la foto más vista (la que posee mayor cantidad de clics).
+	
+	b) Cantidad total de Me gusta recibidas a las fotos cuyo autor es el fotógrafo “Art Vandelay”.
+	
+	c) Cantidad de comentarios recibidos para cada una de las fotos publicadas en esa página.
+
+}
 
 program ejercicio11;
 const
-	dimf = 3;
+	cantImagenes = 200;
 type
-	subFoto = 1..dimf;
 	foto = record
 		titulo: string;
 		autor: string;
-		cantMG: integer;
+		cantMegustas: integer;
 		cantClics: integer;
-		cantComentarios: integer;
+		cantComent: integer;
 	end;
-	vecFotos = array [subFoto] of foto;
-procedure leerFoto(var f: foto);
+	guardadoDeFotos = array [1..cantImagenes] of foto;
+
+procedure leerInfoFoto(var f:foto);
 begin
-	writeln('Ingrese el titulo de la foto');
-	readln(f.titulo);
-	writeln('Ingrese el autor de la foto');
-	readln(f.autor);
-	writeln('Ingrese la cantidad de me gusta en la foto');
-	readln(f.cantMG);
-	writeln('Ingrese la cantidad de clics en la foto');
-	readln(f.cantClics);
-	writeln('Ingrese la cantidad de comentarios de usuarios en la foto');
-	readln(f.cantComentarios);
+		write('Ingrese el titulo de la foto: ');
+		readln(f.titulo);
+		write('Ingrese el nombre del autor: ');
+		readln(f.autor);
+		write('Ingrese la cantidad de likes: ');
+		readln(f.cantMegustas);
+		write('Ingrese la cantidad de Clics: ');
+		readln(f.cantClics);
+		write('Ingrese la cantidad de comentarios: ');
+		readln(f.cantComent);
 end;
-procedure cargarVector(var v: vecFotos);
+procedure almacenarFoto(var g: guardadoDeFotos);
 var
-	i: subFoto;
-    f: foto;
+	f:foto;
+	i:integer;
 begin
-	for i:= 1 to dimf do
-		begin
-			leerFoto(f);
-			v[i]:= f;
-		end;
+	writeln('Vamos a registrar cada foto publicada en su página de Facebook');
+	for i := 1 to cantImagenes do
+	begin
+	    writeln('-----Datos de la foto: -----');
+		leerInfoFoto(f);
+		g[i] := f;
+	end;
 end;
-procedure maximo(var max: integer; var tituloMax: string; cant: integer; titulo: string);
-begin
-	if(cant > max) then
-		begin
-			max:= cant;
-			tituloMax:= titulo;
-		end;
-end;
-procedure procesarVector(v: vecFotos; var tituloMax: string; var cantMGArt: integer);
+procedure incisoA(g: guardadoDeFotos);
 var
-	i: subFoto;
-	max: integer;
+    aux,pos, i : integer;
 begin
-	max:= -1;
-	for i:= 1 to dimf do
-		begin
-			maximo(max, tituloMax, v[i].cantClics, v[i].titulo);
-			if(v[i].autor = 'Art Vandelay') then
-				cantMGArt:= cantMGArt + v[i].cantMG;
-			writeln('Para la foto ', i, ' la cantidad de comentarios recibidos fue: ', v[i].cantComentarios);
-		end;
+    aux := -1;
+    for i := 1 to cantImagenes do
+	begin
+	    if(g[i].cantClics > aux) then
+	    begin
+	        aux := g[i].cantClics;
+	        pos := i;
+	    end;
+	end;
+	writeln('la foto más vistadad es: ', g[pos].titulo);
 end;
+procedure incisoB(g: guardadoDeFotos);
 var
-	v: vecFotos;
-	tituloMax: string;
-	cantMGArt: integer;
+    aux, i : integer;
 begin
-	cargarVector(v);
-	cantMGArt:= 0;
-	procesarVector(v, tituloMax, cantMGArt);
-	writeln('El titulo de la foto mas vista es: ', tituloMax);
-	writeln('La cantidad total de Me gusta recibidas a las fotos cuyo autor es el fotografo Art Vandelay es: ', cantMGArt);
-end.
+    aux := 0;
+    for i := 1 to cantImagenes do
+	begin
+	    if(g[i].autor = 'Art Vandelay') then
+	    begin
+	        aux := aux + g[i].cantMegustas;
+	    end;
+	end;
+	writeln('la cantidad de me gusta recibidas a las fotos cuyo autor es el fotógrafo “Art Vandelay” : ', aux);
+end;
+procedure incisoC(g: guardadoDeFotos);
+var
+    aux, i : integer;
+begin
+    aux := 0;
+    for i := 1 to cantImagenes do
+        writeln('Foto "', g[i].titulo, '" recibió ', g[i].cantComent, ' comentarios.');
+end;
+
+var
+	g: guardadoDeFotos;
+begin
+	almacenarFoto(g);
+	incisoA(g);
+	incisoB(g);
+	incisoC(g);
+End.
