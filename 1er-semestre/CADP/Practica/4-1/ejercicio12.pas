@@ -95,11 +95,10 @@ begin
 	incisoC := aux;
 end;
 procedure incisoD(v: almGalaxias; var nombreMin1: string; var nombreMin2: string; var nombreMax1: string; var nombreMax2: string);
--- d) El nombre de las dos galaxias con mayor masa y el de las dos galaxias con menor masa.--
 var
-	min1, min2, max1, max2 ,i:nteger;
+	min1, min2, max1, max2 ,i: integer;
 begin
-	min1 : 99999; 
+	min1 := 99999; 
 	min2 := 9999;
 	max1 := -2; 
 	max2 := -1;
@@ -112,7 +111,7 @@ begin
 			min1 := v[i].masa;
 			nombreMin1 := v[i].nombre;
 		end
-		else if(v[i] < min2) then
+		else if(v[i].masa < min2) then
 		begin
 			min2 := v[i].masa;
 			nombreMin2 := v[i].nombre;
@@ -124,7 +123,7 @@ begin
 			max1 := v[i].masa;
 			nombreMax1 := v[i].nombre;
 		end
-		else if(v[i] > max2) then
+		else if(v[i].masa > max2) then
 		begin
 			max2 := v[i].masa;
 			nombreMax2 := v[i].nombre;
