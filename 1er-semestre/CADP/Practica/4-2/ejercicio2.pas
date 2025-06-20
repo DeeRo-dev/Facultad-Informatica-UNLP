@@ -1,103 +1,134 @@
-{2. Realice un programa que resuelva los siguientes incisos:
-a. Lea nombres de alumnos y los almacene en un vector de a lo sumo 500 elementos. La lectura finaliza
-cuando se lee el nombre ‘ZZZ’, que no debe procesarse.
-b. Lea un nombre y elimine la primera ocurrencia de dicho nombre en el vector.
-c. Lea un nombre y lo inserte en la posición 4 del vector.
-d. Lea un nombre y lo agregue al vector.
-Nota: Realizar todas las validaciones necesarias.}
+{
+	2. Realice un programa que resuelva los siguientes incisos:
+
+	a. Lea nombres de alumnos y los almacene en un vector de a lo sumo 500 elementos. La lectura finaliza
+	cuando se lee el nombre ‘ZZZ’, que no debe procesarse.
+	
+	b. Lea un nombre y elimine la primera ocurrencia de dicho nombre en el vector.
+	
+	c. Lea un nombre y lo inserte en la posición 4 del vector.
+	
+	d. Lea un nombre y lo agregue al vector.
+
+	--Nota: Realizar todas las validaciones necesarias.
+
+}
 
 program ejercicio2;
-const
-	dimf = 500;
+const 
+	dimF = 500;
+	cantCaracteresNombre = 50;
 type
-	subRango = 1..dimf;
-	vector = array [subRango] of string;
-procedure cargarVector(var v: vector; var diml: integer);
-var
-	nombre: string;
-begin
-	writeln('Ingrese un nombre de alumno');
-	readln(nombre);
-	while(diml < dimf) and (nombre <> 'ZZZ') do
-		begin
-			diml:= diml + 1;
-			v[diml]:= nombre;
-			writeln('Ingrese un nombre de alumno');
-			readln(nombre);
-		end;
-end;
-procedure eliminarNombre(var v: vector; var diml: integer; nombre: string);
-var
-	pos, i: subRango;
-begin
-	pos:= 1;
-	while(pos <= diml) and (v[pos] <> nombre) do
-		pos:= pos + 1;
-	if(pos<= diml) and (v[pos] = nombre) then
-		begin
-			for i:= pos to (diml-1) do
-				v[i]:= v[i+1];
-			diml:= diml-1;
-			writeln('Se elimino correctamente del vector el nombre ', nombre);
-		end
-	else
-		writeln('No se encontro el nombre ', nombre);
-end;
-procedure insertarAlVector(var v: vector; var diml: integer; pos: integer; nombre: string);
+	alumnos = array [1..dimF] of string[cantCaracteresNombre];
+
+procedure leerAlumnos(var a: alumnos; var dimL: integer);
+const 
+	corte = 'ZZZ';
 var
 	i: integer;
+	nombre: string[cantCaracteresNombre];
 begin
-	if ((diml+1)<=dimf) and (pos>=1) and (pos<=diml) then
+	i := 1;
+	write('Ingrese el nombre del alumno: ');
+	readln(nombre);
+	while((i <= dimF) and (nombre <> corte)) do
+	begin
+		a[i] := nombre;
+		dimL := dimL + 1;
+		i := i + 1;
+		if(dimL < dimF) then
 		begin
-			for i:= diml downto pos do
-				v[i+1]:= v[i];
-			v[pos]:= nombre;
-			diml:= diml + 1;
-			writeln('Se inserto correctamente al vector el nombre ', nombre);
-		end
-	else
-		writeln('No se pudo insertar al vector el nombre ', nombre);
-end;
-procedure agregarAlVector(var v: vector; var diml: integer; nombre: string);
-begin
-	if((diml+1) <= dimf) then
-		begin
-			diml:= diml+1;
-			v[diml]:= nombre;
-			writeln('Se agrego correctamente al vector el nombre ', nombre);
+		   write('Ingrese el nombre del alumno: ');
+	       readln(nombre); 
 		end;
+	end;
 end;
-procedure imprimirVector(v: vector; diml: integer);
+
+procedure imprimir(a: alumnos; dimL: integer);
 var
-    i: integer;
+	i : integer;
 begin
-    for i:= 1 to diml do
-        write(v[i], ' | ');
+	for i := 1 to dimL do
+		writeln('alumno: ', a[i]);
+end;
+
+procedure incisoB(var a: alumnos; var dimL: integer; n: string; var ok: boolean);
+var
+	i, j: integer;
+begin
+	ok := false;
+	i := 1;
+	while (i <= dimL) and (not ok) do
+	begin
+		if (a[i] = n) then
+		begin
+			ok := true;
+			for j := i to dimL - 1 do
+				a[j] := a[j + 1];
+			dimL := dimL - 1;
+		end
+		else
+			i := i + 1;
+	end;
+end;
+
+procedure incisoC(var a: alumnos; var dimL: integer; n2: string; var ok: boolean);
+var
+	i, pos: integer;
+begin
+	pos := 4;
+	ok := false;
+	if( (dimL < dimF) and ((pos >=1) and (pos <= dimL))) then
+	begin
+		for i := dimL downto pos do
+			a[i + 1] := a[i];
+		a[pos]:=n2;
+		ok:= true;
+		dimL := dimL + 1;
+	end;
+end;
+
+procedure incisoD(var a: alumnos; var dimL: integer; n3: string; var ok: boolean);
+begin
+	ok:= false;
+	if(dimL < dimF) then
+	begin
+		ok:=true;
+		dimL := dimL + 1;
+		a[dimL] := n3;
+	end;
 end;
 var
-    v: vector;
-    diml: integer;
-    nombre: string;
+	a: alumnos;
+	dimL : integer;
+	ok : boolean;
+	n, n2, n3: string[cantCaracteresNombre]; 
 begin
-    diml:= 0;
-    cargarVector(v, diml);
-    imprimirVector(v, diml);
-    writeln();
-
-    writeln('Ingrese un nombre a eliminar del vector');
-    readln(nombre);
-    eliminarNombre(v, diml, nombre);
-    imprimirVector(v, diml);
-    writeln();
-
-    writeln('Ingrese un nombre a insertar del vector en la posicion 4');
-    readln(nombre);
-    insertarAlVector(v, diml, 4, nombre);
-    imprimirVector(v, diml);
-    writeln();
+	dimL := 0;
+	leerAlumnos(a, dimL);
+	writeln(dimL, dimF);
+	imprimir(a, dimL);
+	writeln('Ingrese un nombre que desea eliminar: ');
+	readln(n);
+	incisoB(a, dimL, n, ok);
+	if(ok) then 
+	    writeln('Se elimino correctamente a ', n);
+	imprimir(a, dimL);
+    write('Ingrese una posicion a insertar en la posicion 4: ');
+    readln(n2);
+    incisoC(a, dimL, n2, ok);
+    if(ok) then 
+        writeln('Se inserto correctamente a ', n2)  // <-- mensaje corregido
+    else
+        writeln('No se pudo insertar (vector lleno o posición inválida)');
+    imprimir(a, dimL);
     
-    writeln('Ingrese un nombre a agregar del vector');
-    readln(nombre);
-    agregarAlVector(v, diml, nombre);
-    imprimirVector(v, diml);
-end.
+    write('Ingrese un nuevo nombre de alumno: ');
+    readln(n3);
+    incisoD(a, dimL, n3, ok);
+    if(ok) then
+        writeln('Se agrego correctamente a ', n3)
+    else
+        writeln('No se pudo agregar (vector lleno)');
+    imprimir(a, dimL);
+End.
