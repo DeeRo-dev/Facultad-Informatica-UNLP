@@ -1,109 +1,146 @@
-{1. a. Dado un vector de enteros de a lo sumo 500 valores, realice un módulo que reciba dicho vector y un valor
-n y retorne si n se encuentra en el vector o no.
-b. Modifique el módulo del inciso a. considerando ahora que el vector se encuentra ordenado de manera
-ascendente.}
+{
+	1. 
+	a. Dado un vector de enteros de a lo sumo 500 valores, realice un módulo que reciba dicho vector y un valor
+	n y retorne si n se encuentra en el vector o no.
+
+	b. Modifique el módulo del inciso a. considerando ahora que el vector se encuentra ordenado de manera
+	ascendente.
+}
+
+
+{
+    
+------- INCISO A----------
+program ejercicio1;
+const
+	dimF = 10;
+type
+	vector = array [1..dimF] of integer;
+
+procedure llenarVectorAleatorio(var v: vector; var dimL: integer);
+var
+  i: integer;
+begin
+  Randomize;
+  dimL := Random(dimF) + 1; // Asegura al menos 1 elemento
+  for i := 1 to dimL do
+    v[i] := Random(100); // Valores entre 0 y 99
+end;
+
+procedure imprimirVector(v: vector; dimL: integer);
+var
+  i: integer;
+begin
+  for i := 1 to dimL do
+    writeln('v[', i, '] = ', v[i]);
+end;
+function incisoA(v: vector; dimL: integer; pos: integer): boolean;
+var
+	i: integer;
+	encontre: boolean;
+begin
+	encontre := false;
+	i := 1;
+	while((i <= dimL) and (encontre = false)) do
+	begin
+		if(v[i] = pos) then
+			encontre := true;
+		i := i + 1;
+	end;
+	incisoA := encontre;
+end;
+var
+	v:vector;
+	pos: integer;
+	esta: boolean;
+	dimL : integer;
+begin
+	dimL := 0;
+	esta := false; 
+	llenarVectorAleatorio(v, dimL);
+	imprimirVector(v, dimL);
+	write('Ingrese un numero para saber si existe: ');
+	readln(pos);
+	esta := incisoA(v, dimL, pos);
+	if(esta = true) then
+		write('El numero: ', pos, ' se encuentra en el arreglo')
+	else
+		write('El numero: ', pos, ' no se encuentra en el arreglo');
+End.
+    
+}
+
+
+
 
 program ejercicio1;
 const
-	dimf = 500;
+	dimF = 10;
 type
-	subRango = 1..dimf;
-	vector = array [subRango] of integer;
-procedure cargarVectorDesordenado(var vec: vector; var diml: integer);
+	vector = array [1..dimF] of integer;
+
+procedure llenarVectorAleatorio(var v: vector; var dimL: integer);
 var
-	i: subRango;
+  i: integer;
 begin
-	diml:= Random(20);
-	writeln('DIML=',diml);
-	for i:= 1 to diml do
-		vec[i]:= Random(100);
+  Randomize;
+  dimL := Random(dimF) + 1; // Asegura al menos 1 elemento
+  for i := 1 to dimL do
+    v[i] := Random(100); // Valores entre 0 y 99
 end;
-procedure cargarVectorOrdenado(var v: vector; var diml: integer);
+
+procedure imprimirVector(v: vector; dimL: integer);
 var
-	i: subRango;
-	num: integer;
+  i: integer;
 begin
-	diml:= Random(20);
-	writeln('DIML=',diml);
-	for i:= 1 to diml do
-		begin
-			writeln('Ingrese un numero entero (orden ascendente)');
-			readln(num);
-			v[i]:= num;
-		end;
+  for i := 1 to dimL do
+    writeln('v[', i, '] = ', v[i]);
 end;
-function busquedaDesordenada(v: vector; diml, n: integer): boolean;
+procedure ordenarVector(var v: vector; dimL: integer);
 var
-	pos: integer;
-	encontre: boolean;
+  i, j, aux: integer;
 begin
-	pos:= 1;
-	encontre:= false;
-	while(pos <= diml) and (not encontre) do
-		begin
-			if(v[pos] = n) then 
-				encontre:= true
-			else
-				pos:= pos + 1;
-		end;
-	busquedaDesordenada:= encontre;
+  for i := 1 to dimL - 1 do
+    for j := i + 1 to dimL do
+      if v[i] > v[j] then
+      begin
+        aux := v[i];
+        v[i] := v[j];
+        v[j] := aux;
+      end;
 end;
-function busquedaMejorada(v: vector; diml, n: integer): boolean;
-var
-	pos: integer;
-begin
-	pos:= 1;
-	while ((pos <= diml) and (v[pos] < n)) do
-		pos:= pos+1;
-	if ((pos <= diml) and (v[pos] = n)) then
-		busquedaMejorada:= true
-	else
-		busquedaMejorada:= false;
-end;
-function busquedaDicotomica(v: vector; diml, n: integer): boolean;
-var
-	pri, ult, medio: integer;
-begin
-	pri:= 1;
-	ult:= diml;
-	medio:= (pri+ult) div 2;
-	while (pri <= ult) and (n <> v[medio]) do
-		begin
-			if (n < v[medio]) then
-				ult:= medio - 1
-			else
-				pri:= medio + 1;
-			medio:= (pri + ult) div 2;
-		end;
-	busquedaDicotomica:= (pri <= ult) and (n = v[medio]);
-end;
-procedure imprimirVector(v: vector; diml: integer);
+
+function incisoB(v: vector; dimL: integer; pos: integer): boolean;
 var
 	i: integer;
+	encontre: boolean;
 begin
-	for i:= 1 to diml do
-		write(v[i], ' | ');
+	encontre := false;
+	i := 1;
+	while((i <= dimL) and (v[i] < pos)) do
+		i := i + 1;
+	if((i <= dimL) and (v[i] = pos)) then
+		incisoB := true;
+	else 
+		incisoB := false;
 end;
 var
-	dimlDesordenado, dimlOrdenado, n: integer;
-	vecDesordenado, vecOrdenado: vector;
+	v:vector;
+	pos: integer;
+	esta: boolean;
+	dimL : integer;
 begin
-	Randomize;
-	dimlDesordenado:= 0;
-	dimlOrdenado:= 0;
-	cargarVectorDesordenado(vecDesordenado, dimlDesordenado);
-	imprimirVector(vecDesordenado, dimlDesordenado);
-	writeln();
-	cargarVectorOrdenado(vecOrdenado, dimlOrdenado);
-	imprimirVector(vecOrdenado, dimlOrdenado);
-	writeln();
-	writeln('Ingrese un primer numero n');
-	readln(n);
-	writeln('Se encontro ', n, ':', busquedaDesordenada(vecDesordenado, dimlDesordenado, n));
-	writeln('Ingrese un segundo numero n');
-	readln(n);
-	writeln('Se encontro ', n, ':', busquedaMejorada(vecOrdenado, dimlOrdenado, n));
-	writeln('Ingrese un tercer numero n');
-	readln(n);
-	writeln('Se encontro ', n, ':', busquedaDicotomica(vecOrdenado, dimlOrdenado, n));
-end.
+	dimL := 0;
+	esta := false; 
+	llenarVectorAleatorio(v, dimL);
+	ordenarVector(v, dimL);
+	imprimirVector(v, dimL);
+	write('Ingrese un numero para saber si existe: ');
+	readln(pos);
+	esta := incisoB(v, dimL, pos);
+	if(esta = true) then
+		write('El numero: ', pos, ' se encuentra en el arreglo')
+	else
+		write('El numero: ', pos, ' no se encuentra en el arreglo');
+End.
+    
