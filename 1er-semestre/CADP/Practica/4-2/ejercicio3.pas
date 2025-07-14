@@ -54,6 +54,7 @@ begin
    while (r.km <> 0) and (dimL < totalViajes) do
     begin
         dimL := dimL + 1;
+        v[dimL] := r; 
         leerViaje(r);
     end;
 end;
@@ -83,6 +84,24 @@ begin
     for i := 1 to 31 do 
         writeln('En el dia ' , i , ' la cantidad de viajes fueron: ', m[i]);
 end;
+procedure eliminarOcurrencia(var v: datosViajes; var dimL: integer);
+var
+    i, j: integer;
+begin
+    i := 1;
+    while i <= dimL do
+    begin
+        if v[i].km = 100 then
+        begin
+            for j := i to dimL - 1 do
+                v[j] := v[j + 1];
+            dimL := dimL - 1;
+        end
+        else
+            i := i + 1;  
+    end;
+end;
+
 var
     d: datosViajes;
     dimL, i: integer;
@@ -95,6 +114,3 @@ begin
     calcularPromedio(d, dimL, m);
         
 End.
-    
-    
-    
