@@ -63,7 +63,7 @@ var
 begin
     if(dimL < dimF) then
     begin
-         pos := 1;
+        pos := 1;
         while((pos <= dimL) and (v[pos].numeroAlm < a.numeroAlm)) do
             pos := pos + 1;
         for i := dimL downto pos do
@@ -74,10 +74,49 @@ begin
     else 
         write('No hay espacio para almacenar alumnos');
 end;
+procedure eliminarAlumno(var v: dataAlumnos; var dimL: integer; var ok : boolean; posElminar: integer);
+var
+    i : integer;
+begin
+    ok:= false;
+    if((posElminar >= 1) and (posElminar <= dimL)) then
+    begin
+        for i := posElminar to (dimL - 1) do
+            v[i] := v[i+1];
+        ok := true;
+        dimL := dimL - 1;
+    end;
+end;
+procedure incisoD(var v: dataAlumnos; var dimL: integer; var ok : boolean; nroDeAlumnoEliminar: integer);
+var
+    pos: integer;
+begin
+    pos := incisoA(v, dimL, nroDeAlumnoEliminar);
+    if (pos >= 1) and (pos <= dimL) then
+        eliminarAlumno(v, dimL, ok, pos)
+    else
+        ok := false;
+end;
+procedure incisoE(var v: dataAlumnos; var dimL: integer);
+var
+    i: integer;
+    ok: boolean;
+begin
+    i := 1;
+    while i <= dimL do
+    begin
+        if v[i].cantAsist = 0 then
+            eliminarAlumno(v, dimL, ok, i)
+        else
+            i := i + 1;
+    end;
+end;
+
 var
     a: alumno;
-    dimL, nro : integer;
+    dimL, nro, posElminar : integer;
     v : dataAlumnos;
+    ok: boolean;
 begin
     dimL := 0;
     registrarAlumno(v, dimL);
@@ -86,4 +125,17 @@ begin
     writeln('El alumno está en la posición: ', incisoA(v, dimL, nro));
     leerAlumno(a);
     insertarAlumno(v, dimL, a);
+    write('Ingrese un numero de alumno para alimanrlo: ');
+    readln(nro);
+    eliminarAlumno(v, dimL, ok, posElminar);
+    // Eliminar por número de alumno
+    write('Ingrese un numero de alumno para eliminarlo: ');
+    readln(nro);
+    incisoD(v, dimL, ok, nro);
+    if ok then
+        writeln('Alumno eliminado exitosamente.');
+    else
+        writeln('No se encontró el alumno.');
+    write('Eliminar los alumnos con asistencias 0');
+    incisoE(v, dimL, nro);
 End.
