@@ -39,15 +39,15 @@ e) Un módulo que imprima N números aleatorios en el
 rango (A,B), donde N, A y B son números enteros que se
 leen por teclado y se reciben como parámetros.
 
-program NumAleatorio;
-procedure imprimirValores(n:integer);
+program incispE;
+procedure imprimirValores(n, a ,b:integer);
 var
     i, ale: integer;
 begin
     for i := 1 to n do 
     begin
-        ale := random (100);
-        writeln('lalaal', ale);   
+       ale := random(b - a - 1) + a + 1;
+        writeln('Valor ', i ,' : ' , ale);   
     end;
 end;
 var 
@@ -64,16 +64,10 @@ begin
         write('El rango para B debe ser mayor que ', a,': ');
         readln(b);
     end;
-    write('Ingrese una cantidad de veces para observar numeros aleatorios entre los rangos: ', a , ' y ', b, ': ');
+    write('Ingrese un numero para que se repitan N: ');
     readln(n);
-    while((n < a) or (n > b)) do
-    begin
-        write('Para N veces debe estar entre los rangos: ', a,' - ', b, ': ');
-        readln(n);
-    end;
-    imprimirValores(n)
+    imprimirValores(n, a, b)
 end.
-
 
 
 
