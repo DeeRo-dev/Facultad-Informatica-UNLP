@@ -70,8 +70,49 @@ begin
 end.
 
 
+{
+    f) Un módulo que imprima números aleatorios en el
+        rango (A,B) hasta que se genere un valor igual a F, el cual
+        no debe imprimirse. F, A y B son números enteros que se
+        leen por teclado y se reciben como parámetros. 
+}
 
-e) Un módulo que imprima números aleatorios en el
-rango (A,B) hasta que se genere un valor igual a F, el cual
-no debe imprimirse. F, A y B son números enteros que se
-leen por teclado y se reciben como parámetros
+
+program incispF;
+procedure imprimirValores(f, a ,b:integer);
+var
+     ale, i: integer;
+begin
+    i := 1;
+    ale := random(b - a - 1) + a + 1;
+    while (ale <> f) do
+    begin
+        writeln('Valor ', i ,' : ' , ale);   
+        ale := random(b - a - 1) + a + 1;
+        i := i + 1;
+    end;
+    writeln;
+    writeln('---  Fin del programa el valor de random ( ', ale , ' ) es = a: ', f, '  ----');
+end;
+var 
+    ale: integer;
+    i, f, a, b: integer;
+begin
+    writeln ('Ingrese un rango entre A y B: ');
+    write('Rango A: ');
+    readln(a);
+    write('Rango B: ');
+    readln(b);
+    while(b < a) do
+    begin
+        write('El rango para B debe ser mayor que ', a,': ');
+        readln(b);
+    end;
+    write('Ingrese un numero para que se repitan N: ');
+    readln(f);
+    imprimirValores(f, a, b)
+end.
+
+
+
+
