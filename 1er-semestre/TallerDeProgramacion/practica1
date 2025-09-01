@@ -2,8 +2,10 @@
     Se desea procesar la información de las ventas de productos de un comercio (como máximo 50). 
     Implementar un programa que invoque los siguientes módulos:
     
-    a. Un módulo que retorne la información de las ventas en un vector. De cada venta se conoce el día de la venta, código del producto (entre 1 y 15) y cantidad vendida
-    (como máximo 99 unidades). El código y el dia deben generarse automáticamente (random) y la cantidad se debe leer. El ingreso de las ventas finaliza con el día de venta 0     
+    a. Un módulo que retorne la información de las ventas en un vector. De cada venta se conoce el día de la venta,
+    código del producto (entre 1 y 15) y cantidad vendida
+    (como máximo 99 unidades). El código y el dia deben generarse automáticamente (random) y la cantidad se debe leer.
+    El ingreso de las ventas finaliza con el día de venta 0     
     (no se procesa).
     
     b. Un módulo que muestre el contenido del vector resultante del punto a).
@@ -16,10 +18,10 @@
     
     f. Un módulo que muestre el contenido del vector resultante del punto e).
     
-    g. Un módulo que retorne la información (ordenada por código de producto de menor a mayor) de cada código par de producto junto a la cantidad total de productos vendidos.
+    g. Un módulo que retorne la información (ordenada por código de producto de menor a mayor) de cada código par de producto junto a la cantidad total
+    de productos vendidos.
     
     h. Un módulo que muestre la información obtenida en el punto g).
-    
     
 }
 
@@ -33,31 +35,64 @@ type
         codigo: integer;
         cantVend: integer;
     end;
-    ventas: array [1..ventasMax] of dataVenta;
+    ventas = array [1..ventasMax] of dataVenta;
     
-procedure leerVenta(var r:dataVenta, corte: integer);
-var
-    i:integer;
+procedure leerVenta(var r:dataVenta);
 begin
-    i := 1;
     r.dia:= random(31);
     r.codigo := random(15);
-    writeln('Ingrese la cantidad de ventas: ');
-    readln(r.cantVend);
-    while(r.cantVend < 99) do
+    if(r.dia <> 0) then
     begin
-        writeln('La cantidad de ventas debe ser menor a 99');
+        writeln('Ingrese la cantidad de ventas: ');
+        writeln('Dia: ', r.dia);
+        writeln('Codigo: ', r.codigo);
+        write('Cantidad de ventas: ');
         readln(r.cantVend);
-    end;
-        
+        while(r.cantVend > 99) do
+        begin
+            writeln('La cantidad de ventas debe ser menor a 99');
+            readln(r.cantVend);
+        end;
+    end
+    else
+        writeln('---El dia es 0 y no se procesa, fin---');
 end;
 
-procedure registrarVentas(var v: ventas);
+procedure registrarVentas(var v: ventas; var dimL: integer);
 var
     registro: dataVenta;
+    i : integer;
 begin
+    i:=1;
     leerVenta(registro);
+    while((registro.dia <> 0) and (dimL <= ventasMax)) do
+    begin
+        v[i] := registro;
+        dimL := dimL + 1;
+        i := i + 1;
+        leerVenta(registro);
+    end;
 end;
+
+procedure imprimirVentas(v:ventas; dimL:integer);
+var
+    i : integer;
 begin
-    
+    for i := 1 to dimL do 
+    begin
+        writeln('-----  Venta -------');
+        writeln('Dia: ', v[i].dia);
+        writeln('Codigo: ', v[i].codigo);
+        writeln('Ventas: ', v[i].cantVend);
+        writeln('--------------------');
+    end;
+end;
+var 
+    dimL : integer;
+    v: ventas;
+begin
+    randomize;
+    dimL := 0;
+    registrarVentas(v, dimL);
+    imprimirVentas(v, dimL);
 End.
