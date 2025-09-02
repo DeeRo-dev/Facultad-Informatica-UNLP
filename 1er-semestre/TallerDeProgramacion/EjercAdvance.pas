@@ -36,11 +36,17 @@ type
         cantVend: integer;
     end;
     ventas = array [1..ventasMax] of dataVenta;
-    
+
+    resumenVenta = record
+        codigo: integer;
+        totalVend: integer;
+    end;
+    resumenArray = array[1..ventasMax] of resumenVenta;
+
 procedure leerVenta(var r:dataVenta);
 begin
     r.dia:= random(31);
-    r.codigo := random(15);
+    r.codigo := random(15) + 1;
     if(r.dia <> 0) then
     begin
         writeln('Ingrese la cantidad de ventas: ');
@@ -65,7 +71,7 @@ var
 begin
     i:=1;
     leerVenta(registro);
-    while((registro.dia <> 0) and (dimL <= ventasMax)) do
+    while((registro.dia <> 0) and (dimL < ventasMax)) do
     begin
         v[i] := registro;
         dimL := dimL + 1;
@@ -87,12 +93,104 @@ begin
         writeln('--------------------');
     end;
 end;
+
+procedure acomodarElArray(var v: ventas; dimL: integer);
+var
+    i, j , pos: integer;
+    item : dataVenta;
+begin
+    for i := 1 to dimL - 1 do
+    begin
+        pos := i;
+        for j :=  i + 1 to dimL  do
+        begin
+            if(v[j].codigo < v[pos].codigo ) then
+                pos := j;
+        end;
+        item := v[pos]; 
+        v[pos] := v[i]; 
+        v[i] := item; 
+    end;
+end;
+
+procedure eliminarVentas(var v: ventas; var dimL: integer; rango1, rango2: integer);
+var
+    i, j: integer;
+begin
+    i := 1;
+    while (i <= dimL) do
+    begin
+        if (v[i].codigo >= rango1) and (v[i].codigo <= rango2) then
+        begin
+            // Desplazar a la izquierda
+            for j := i to dimL - 1 do
+                v[j] := v[j+1];
+            dimL := dimL - 1;   // achicar dimensión lógica
+            // NO incrementamos i, porque ahora hay un nuevo elemento en la misma posición
+        end
+        else
+            i := i + 1;
+    end;
+end;
+
+procedure resumenCodigosPares(v: ventas; dimL: integer; var r: resumenArray; var dimR: integer);
+var
+    i, actualCodigo, total: integer;
+begin
+    dimR := 0;
+    i := 1;
+    while (i <= dimL) do
+    begin
+        actualCodigo := v[i].codigo;
+        total := 0;
+        
+        // Acumular todas las ventas del mismo código
+        while (i <= dimL) and (v[i].codigo = actualCodigo) do
+        begin
+            total := total + v[i].cantVend;
+            i := i + 1;
+        end;
+        
+        // Solo guardamos si es código par
+        if (actualCodigo mod 2 = 0) then
+        begin
+            dimR := dimR + 1;
+            r[dimR].codigo := actualCodigo;
+            r[dimR].totalVend := total;
+        end;
+    end;
+end;
+
+procedure imprimirResumen(r: resumenArray; dimR: integer);
+var
+    i: integer;
+begin
+    writeln('--- Resumen de codigos pares ---');
+    for i := 1 to dimR do
+    begin
+        writeln('Codigo: ', r[i].codigo, '  Total vendido: ', r[i].totalVend);
+    end;
+end;
+
+
 var 
-    dimL : integer;
+    resumen: resumenArray;
+    dimR: integer;
+    dimL, rango1, rango2 : integer;
     v: ventas;
 begin
     randomize;
     dimL := 0;
     registrarVentas(v, dimL);
     imprimirVentas(v, dimL);
+    acomodarElArray(v, dimL);
+    imprimirVentas(v, dimL);
+    write('Ingrese dos rangos para eliminar elementos del arrray: ');
+    readln(rango1);
+    write('Ahora un segundo: ');
+    readln(rango2);
+    eliminarVentas(v, dimL, rango1, rango2);
+    imprimirVentas(v, dimL);
+    resumenCodigosPares(v, dimL, resumen, dimR);
+    imprimirResumen(resumen, dimR)
 End.
