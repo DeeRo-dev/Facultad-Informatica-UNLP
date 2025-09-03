@@ -56,25 +56,63 @@ begin
         leerOfi(registro);
     end;
 end;
+procedure imprimir(v: ventas; dimL: integer);
+var
+    i: integer;
+begin
+    for i := 1 to dimL do
+    begin
+        writeln('Ventas numero ', i, ': ');
+        writeln('Codigo: ', v[i].codigo);
+        writeln('Dni: ', v[i].dni);
+        writeln('Valor de la expensa: ', v[i].valorExp:0:2);
+        writeln('-------------------');
+    end;
+end;
 procedure ordenarInsersion(var v: ventas; dimL : integer);
 var
-    i,j, actual, indice: integer;
-    item: dataOficina;
+    i,j: integer;
+    actual: dataOficina;
 begin   
-    for i := 2 to dimL to
+    for i := 2 to dimL do
     begin
         actual := v[i];
         j := i - 1;
-        while((j > 0) and (v[i]. codigo > v[j].codigo)) then
+        while((j > 0) and (v[j].codigo > actual.codigo)) do
         begin
+            v[ j + 1]  := v[j];
+            j := j - 1;
         end;
-        
+        v[ j + 1 ] := actual;
     end;
     
 end;
+
+procedure ordenarSeleccion(var v: ventas; dimL: integer);
+var
+    i,j, pos: integer;
+    item: dataOficina;
+begin
+    for i := 1 to dimL - 1 do
+    begin
+        pos := i;
+        for j := i + 1 to dimL  do
+        begin
+            if(v[j].codigo < v[pos].codigo) then 
+                pos := j;
+        end;
+        item := v[pos];
+        v[pos] := v[i]; 
+        v[i] := item;
+    end;
+end;
+
 var
     v : ventas;
     dimL: integer;
 begin
     almacenarVentas(v, dimL);
+    imprimir(v, dimL);
+    ordenarSeleccion(v, dimL);
+    imprimir(v, dimL);
 End.
