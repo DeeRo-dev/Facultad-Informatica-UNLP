@@ -37,7 +37,12 @@ type
         sig : peliculas;
     end;
     
-    dataGeneros = array [generos] of integer;
+    mejorPelicula = record
+        codigoPel: integer;
+        puntaje: real;
+    end;
+
+    dataGeneros = array [generos] of mejorPelicula;
     
 procedure leerPelicula(var r: pelicula);
 begin
@@ -48,6 +53,11 @@ begin
     begin
         write('Ingrese el codigo de genero: ');
         readln(r.codigoGen);
+        while((r.codigoGen < 1) or (r.codigoGen > limit)) do
+        begin
+            write('Ingrese el codigo 1..8: ');
+            readln(r.codigoGen);
+        end;
         write('Ingrese el puntaje promedio: ');
         readln(r.puntaje);
     end;
@@ -89,27 +99,76 @@ end;
 
 procedure incisoB(l : peliculas; var g : dataGeneros);
 var
-    gen: generos;
+    i: integer;
 begin
-    // Inicializar el vector con valores mínimos
-    for gen := 1 to limit do
+    // Inicializar
+    for i := 1 to limit do
     begin
-        g[gen].puntaje := -1; // valor muy bajo
-        g[gen].codigoPel := -1;
+        g[i].codigoPel := -1;
+        g[i].puntaje := -1.0;
     end;
 
-    // Recorrer la lista una sola vez
+    // Recorrer la lista
     while (l <> nil) do
     begin
-        gen := l^.dato.codigoGen;
-        if (l^.dato.puntaje > g[gen].puntaje) then
+        if (l^.dato.puntaje > g[l^.dato.codigoGen].puntaje) then
         begin
-            g[gen].puntaje := l^.dato.puntaje;
-            g[gen].codigoPel := l^.dato.codigoPel;
+            g[l^.dato.codigoGen].codigoPel := l^.dato.codigoPel;
+            g[l^.dato.codigoGen].puntaje := l^.dato.puntaje;
         end;
         l := l^.sig;
     end;
 end;
+
+
+procedure ordernarSeleccion(var v : dataGeneros);
+var
+	i,j, pos: integer;
+	item: mejorPelicula;
+begin
+	for i := 1 to limit - 1 do
+	begin
+		pos := i;
+		for j := i + 1 to limit do
+		begin
+			if(v[j].puntaje < v[pos].puntaje) then
+			begin
+				pos := j;
+			end;
+			item := v[pos];
+			v[pos] := v[i];
+			v[i] := item;
+		end;
+	end;
+end;
+
+procedure incisoD(v : dataGeneros);
+var
+	i, codMax, codMin: integer;
+	max, min: real;
+begin
+	max:= -1;
+	min:= 999;
+	for i := 1 to limit do
+	begin
+		if(v[i].puntaje > max) then
+		begin
+			codMax := v[i].codigoPel;
+			max:= v[i].puntaje;
+		end;
+		if(v[i].puntaje < min) then
+		begin
+			codMin := v[i].codigoPel;
+			min:= v[i].puntaje;
+		end;
+	end;
+	writeln;
+	writeln('La pelicula con mayor puntaje (', max , ') es la que tiene codigo: ', codMax);
+	writeln;
+	writeln('La pelicula con menor puntaje (', min , ') es la que tiene codigo: ', codMin);
+	writeln;
+end;
+
 var
     l : peliculas;
     g :dataGeneros;
@@ -118,7 +177,7 @@ begin
     l := nil;
     cargarInfo(l);
     imprimirPeliculas(l);
-    for i := 1 to limit do
-        g[i] := -1;
     incisoB(l, g);
+    ordernarSeleccion(g);
+    incisoD(g);
 End.
