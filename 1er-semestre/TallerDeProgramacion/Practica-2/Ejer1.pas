@@ -23,8 +23,7 @@ const dimF = 15;
       min = 10;
       max = 155;
 type vector = array [1..dimF] of integer;
-     
-
+  
 procedure CargarVector (var v: vector; var dimL: integer);
 
   procedure CargarVectorRecursivo (var v: vector; var dimL: integer);
@@ -62,10 +61,14 @@ begin
      writeln;
 End;     
 
-procedure ImprimirVectorRecursivo (v: vector; dimL: integer);
-begin    
-     {-- Completar --}     
-end; 
+procedure ImprimirVectorRecursivo(v: vector; dimL: integer);
+begin
+  if (dimL > 0) then
+  begin
+    ImprimirVectorRecursivo(v, dimL - 1);  { primero recorre los anteriores }
+    writeln(v[dimL]);                       { luego imprime el actual }
+  end;
+end;
     
 function Sumar (v: vector; dimL: integer): integer; 
 
@@ -83,14 +86,42 @@ begin
  Sumar:= SumarRecursivo (v, pos, dimL);
 end;
 
-function  ObtenerMaximo (v: vector; dimL: integer): integer;
+function ObtenerMaximo(v: vector; dimL: integer): integer;
+	function ObtenerMaximoRecursivo(v: vector; dimL: integer): integer;
+	var
+	  maxAnterior: integer;
+	begin
+	  if (dimL = 1) then
+		ObtenerMaximoRecursivo := v[1]  
+	  begin
+		maxAnterior := ObtenerMaximoRecursivo(v, dimL - 1);  
+		if v[dimL] > maxAnterior then
+		  ObtenerMaximoRecursivo := v[dimL]
+		else
+		  ObtenerMaximoRecursivo := maxAnterior;
+	  end;
+	end;
+	
 begin
-  {-- Completar --} 
-end;     
+  if dimL = 0 then
+    ObtenerMaximo := -1    
+  else
+    ObtenerMaximo := ObtenerMaximoRecursivo(v, dimL);
+end;
      
 function  BuscarValor (v: vector; dimL, valor: integer): boolean;
 begin
-  {-- Completar --} 
+	if(dimL = 0) then 
+		BucarValor := false
+	else if(dimL = 1) then
+	begin
+		if(v[dimL] = valor) then
+			BuscarValor := true
+		else
+			BuscarValor := false;
+	end
+	else
+	BuscarValor := BuscarValor(v, dimL - 1, valor);
 end; 
 
 procedure ImprimirDigitos (v: vector; dimL: integer);
@@ -104,11 +135,13 @@ var dimL, suma, maximo, valor: integer;
 Begin 
   CargarVector (v, dimL);
   writeln;
-  if (dimL = 0) then writeln ('--- Vector sin elementos ---')
-                else begin
-                       ImprimirVector (v, dimL);
-                     {  ImprimirVectorRecursivo (v, dimL);}
-                     end;
+  if (dimL = 0) then
+   writeln ('--- Vector sin elementos ---')
+  else
+  begin
+	ImprimirVector (v, dimL);
+    ImprimirVectorRecursivo (v, dimL);
+  end;
   writeln;
   writeln;                   
   suma:= Sumar(v, dimL);
@@ -128,9 +161,10 @@ Begin
   encontre:= BuscarValor(v, dimL, valor);
   writeln;
   writeln;
-  if (encontre) then writeln('El ', valor, ' esta en el vector')
-                else writeln('El ', valor, ' no esta en el vector');
-                
+  if (encontre) then
+	writeln('El ', valor, ' esta en el vector')
+  else writeln('El ', valor, ' no esta en el vector');
+               
   writeln;
   writeln;
   ImprimirDigitos (v, dimL);
