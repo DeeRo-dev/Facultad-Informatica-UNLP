@@ -24,3 +24,26 @@ program ejercicio6;
 begin
    write(lectura);
 end.
+//Otra forma de hacerlo es la siguiente:
+program Ejercicio6;
+    procedure leerNums(num: integer);
+    var
+        numAlto:integer;
+    begin
+        numAlto:=0;
+        writeln('Ingrese valores positivos: ');
+        readln(numAlto);
+        while(num >= 0) do
+        begin
+            if(num > numAlto) then
+                numAlto:=num;
+            writeln('Ingrese otro numero');
+            read(num);
+        end;
+        writeln('El numero mas alto ingresado es de: ', numAlto);
+    end;
+var
+    num: integer;
+begin
+    leerNums(num);
+End.
