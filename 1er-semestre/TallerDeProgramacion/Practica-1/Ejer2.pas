@@ -116,3 +116,98 @@ begin
     ordenarSeleccion(v, dimL);
     imprimir(v, dimL);
 End.
+
+
+//Segunga opcion 
+//	El administrador de un edificio de oficinas cuenta, en papel, con la información del
+//	pago de las expensas de dichas oficinas. Implementar un programa que invoque a
+//	módulos para cada uno de los siguientes puntos:
+
+//	a.  Genere un vector, sin orden, con a lo sumo las 300 oficinas que administra. De
+//		cada oficina se ingresa el código de identificación, DNI del propietario y valor
+//		de la expensa. La lectura finaliza cuando se ingresa el código de identificación
+//		-1, el cual no se procesa.
+
+//	b.  Ordene el vector aplicando el método de selección, por código de
+//		identificación de la oficina.
+
+
+program ejercicio2;
+const 
+	dimF = 4;
+type
+	data = record 
+	cod: integer;
+	dni: integer;
+	valor:real;
+	end;
+	info = array [1..dimF] of data;
+
+procedure lectura(var d: data);
+begin
+	write('Ingrese el codigo: ');
+	readln(d.cod);
+	if(d.cod <> -1) then
+	begin
+		write('Ingrese el DNI del propietario: ');
+		readln(d.dni);
+		write('Ingrese el valor de la expn: ');
+		readln(d.valor);
+	end;
+end;
+
+procedure registroDeInfo(var v: info; var dimL: integer);
+var 
+	aux: data;
+begin
+
+	while(dimL < dimF) do
+	begin
+		lectura(aux);
+		if(aux.cod <> -1) then 
+		begin
+			dimL := dimL +1;
+			v[dimL] := aux;
+		end;
+	end;
+end;
+
+procedure ordenar(var v : info; dimL: integer);
+var
+	i, j, pos:integer;
+	item: data;
+begin
+	for i:= 1 to dimL -1 do
+	begin
+		pos := i;
+		for j := (i + 1) to dimL do
+		begin 
+			if(v[j].cod < v[pos].cod) then
+				pos:= j;
+		end;
+		item:= v[pos];
+		v[pos]:= v[i];
+		v[i]:= item;
+	end;
+end;
+
+procedure imprimir(v: info; dimL : integer);
+var
+	i: integer;
+begin
+	for i:= 1 to dimL do
+		writeln('Valor: ', v[i].cod);
+end;
+var 
+	v: info;
+	dimL : integer;
+begin
+	dimL := 0;
+	registroDeInfo(v, dimL);
+	writeln('Dimension logica: ', dimL);
+	imprimir(v, dimL);
+	writeln('------------------------');
+	ordenar(v, dimL);
+	imprimir(v, dimL);
+End.
+
